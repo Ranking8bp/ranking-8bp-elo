@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - Ranking 8BP</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#05090a;
+    color:white;
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+    padding:30px 20px;
+}
+
+header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#081012;
+    border:1px solid #1b3034;
+    border-radius:14px;
+    padding:18px 22px;
+    margin-bottom:25px;
+}
+
+.logo{
+    font-size:24px;
+    font-weight:bold;
+}
+
+.logo span{
+    color:#9cff00;
+}
+
+button{
+    border:0;
+    border-radius:8px;
+    padding:12px 18px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.btn-green{
+    background:#9cff00;
+    color:#000;
+}
+
+.btn-red{
+    background:#ff3030;
+    color:white;
+}
+
+.login-box,
+.admin-box{
+    background:#081012;
+    border:1px solid #1b3034;
+    border-radius:15px;
+    padding:25px;
+}
+
+.login-box{
+    max-width:420px;
+    margin:80px auto;
+}
+
+h1,h2{
+    margin-top:0;
+}
+
+input,select{
+    width:100%;
+    padding:13px;
+    margin:8px 0 15px;
+    border-radius:8px;
+    border:1px solid #294348;
+    background:#05090a;
+    color:white;
+}
+
+label{
+    display:block;
+    font-weight:bold;
+    margin-top:10px;
+}
+
+.hidden{
+    display:none;
+}
+
+.player{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border:1px solid #1b3034;
+    padding:15px;
+    border-radius:10px;
+    margin-top:10px;
+}
+
+.player-info{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.avatar{
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    object-fit:cover;
+    background:#222;
+}
+
+.actions{
+    display:flex;
+    gap:8px;
+}
+
+.error{
+    color:#ff5252;
+    margin-top:10px;
+}
+
+.success{
+    color:#9cff00;
+    margin-top:10px;
+}
+
+@media(max-width:600px){
+    .player{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+    }
+
+    .actions{
+        width:100%;
+    }
+
+    .actions button{
+        flex:1;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- LOGIN -->
+    <div id="loginSection" class="login-box">
+
+        <h1>🔐 ADMIN 8BP</h1>
+        <p>Panel de administración del Ranking 8BP</p>
+
+        <label>Correo</label>
+        <input type="email" id="email" placeholder="Correo del administrador">
+
+        <label>Contraseña</label>
+        <input type="password" id="password" placeholder="Contraseña">
+
+        <button class="btn-green" onclick="login()">
+            ENTRAR
+        </button>
+
+        <div id="loginError" class="error"></div>
+
+    </div>
+
+
+    <!-- ADMIN -->
+    <div id="adminSection" class="hidden">
+
+        <header>
+
+            <div class="logo">
+                RANKING <span>8BP</span> ADMIN
+            </div>
+
+            <button class="btn-red" onclick="logout()">
+                CERRAR SESIÓN
+            </button>
+
+        </header>
+
+
+        <div class="admin-box">
+
+            <h2>👥 Jugadores</h2>
+
+            <button class="btn-green" onclick="nuevoJugador()">
+                + AGREGAR JUGADOR
+            </button>
+
+            <div id="playersList">
+                Cargando jugadores...
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script type="module">
+
+import { initializeApp } from
+"https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    onAuthStateChanged,
+    signOut
+}
+from
+"https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+import {
+    getDatabase,
+    ref,
+    onValue
+}
+from
+"https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyAewmp-duXpfMyL9MenMGxKOAGuUi96phs",
+
+    authDomain: "raking8bp.firebaseapp.com",
+
+    databaseURL:
+    "https://raking8bp-default-rtdb.firebaseio.com",
+
+    projectId: "raking8bp",
+
+    storageBucket:
+    "raking8bp.firebasestorage.app",
+
+    messagingSenderId:
+    "448167900361",
+
+    appId:
+    "1:448167900361:web:9eaa6b20b0fa21108bc918",
+
+    measurementId:
+    "G-HVR8GD1RF1"
+
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const database = getDatabase(app);
+
+
+window.login = async function(){
+
+    const email =
+        document.getElementById("email").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    const error =
+        document.getElementById("loginError");
+
+    error.textContent = "";
+
+    if(!email || !password){
+
+        error.textContent =
+        "Escribe tu correo y contraseña.";
+
+        return;
+    }
+
+    try{
+
+        await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+
+    }catch(e){
+
+        console.error(e);
+
+        error.textContent =
+        "Correo o contraseña incorrectos.";
+
+    }
+
+};
+
+
+window.logout = async function(){
+
+    await signOut(auth);
+
+};
+
+
+window.nuevoJugador = function(){
+
+    alert(
+        "El sistema de jugadores lo vamos a conectar en el siguiente paso."
+    );
+
+};
+
+
+onAuthStateChanged(auth,(user)=>{
+
+    if(user){
+
+        document
+        .getElementById("loginSection")
+        .classList.add("hidden");
+
+        document
+        .getElementById("adminSection")
+        .classList.remove("hidden");
+
+        cargarJugadores();
+
+    }else{
+
+        document
+        .getElementById("loginSection")
+        .classList.remove("hidden");
+
+        document
+        .getElementById("adminSection")
+        .classList.add("hidden");
+
+    }
+
+});
+
+
+function cargarJugadores(){
+
+    const jugadoresRef =
+        ref(database,"jugadores");
+
+    onValue(jugadoresRef,(snapshot)=>{
+
+        const data =
+            snapshot.val();
+
+        const container =
+            document.getElementById("playersList");
+
+        container.innerHTML = "";
+
+        if(!data){
+
+            container.innerHTML =
+            "<p>No hay jugadores registrados todavía.</p>";
+
+            return;
+        }
+
+        Object.entries(data).forEach(
+            ([id,jugador])=>{
+
+                const div =
+                    document.createElement("div");
+
+                div.className="player";
+
+                div.innerHTML=`
+
+                    <div class="player-info">
+
+                        <img
+                            class="avatar"
+                            src="${jugador.foto || ''}"
+                        >
+
+                        <div>
+
+                            <strong>
+                                ${jugador.nombre || "Sin nombre"}
+                            </strong>
+
+                            <br>
+
+                            <small>
+                                ${jugador.pais || ""}
+                                · ELO:
+                                ${jugador.elo || 1000}
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <div class="actions">
+
+                        <button
+                            class="btn-green"
+                            onclick="editarJugador('${id}')">
+                            EDITAR
+                        </button>
+
+                    </div>
+                `;
+
+                container.appendChild(div);
+
+            }
+        );
+
+    });
+
+}
+
+
+window.editarJugador = function(id){
+
+    alert(
+        "Aquí pondremos el editor completo del jugador."
+    );
+
+};
+
+</script>
+
+</body>
+</html>
