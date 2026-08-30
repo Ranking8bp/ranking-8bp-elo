@@ -1,0 +1,4379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Ranking 8BP - ELO Oficial</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#020708;
+    color:#fff;
+    min-height:100vh;
+}
+
+/* =========================
+   CONTENEDOR PRINCIPAL
+========================= */
+
+.app{
+    display:flex;
+    min-height:100vh;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+    width:250px;
+    background:linear-gradient(180deg,#061012,#020708);
+    border-right:1px solid #172729;
+    padding:20px 15px;
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    z-index:10;
+}
+
+.logo{
+    text-align:center;
+    padding:10px 0 30px;
+}
+
+.logo .ball{
+    width:65px;
+    height:65px;
+    margin:auto;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#fff 0 8%,#111 9% 55%,#ddd 56% 60%,#111 61%);
+    border:4px solid #b8ff00;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:27px;
+    font-weight:bold;
+    box-shadow:0 0 20px rgba(185,255,0,.25);
+}
+
+.logo h1{
+    margin-top:10px;
+    font-size:25px;
+    font-style:italic;
+    letter-spacing:-1px;
+}
+
+.logo h1 span{
+    color:#b8ff00;
+}
+
+.logo small{
+    color:#7f8d8e;
+    font-size:10px;
+}
+
+/* =========================
+   MENU
+========================= */
+
+.menu{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.menu button{
+    background:transparent;
+    border:0;
+    color:#c7cecf;
+    padding:14px 12px;
+    border-radius:7px;
+    text-align:left;
+    cursor:pointer;
+    font-size:14px;
+    transition:.2s;
+}
+
+.menu button:hover{
+    background:#0d1d1f;
+    color:#b8ff00;
+}
+
+.menu button.active{
+    background:linear-gradient(90deg,#0d2825,#091617);
+    color:#b8ff00;
+    border-left:3px solid #b8ff00;
+}
+
+/* =========================
+   INFO SIDEBAR
+========================= */
+
+.general{
+    margin-top:25px;
+    border:1px solid #193033;
+    border-radius:8px;
+    padding:15px;
+}
+
+.general h3{
+    color:#b8ff00;
+    font-size:12px;
+    margin-bottom:15px;
+}
+
+.stat-side{
+    margin-bottom:14px;
+}
+
+.stat-side span{
+    display:block;
+    color:#7d8a8c;
+    font-size:11px;
+}
+
+.stat-side strong{
+    font-size:18px;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.main{
+    margin-left:250px;
+    width:calc(100% - 250px);
+    padding:30px;
+}
+
+/* =========================
+   TOP BAR
+========================= */
+
+.topbar{
+    height:65px;
+    border:1px solid #172a2c;
+    background:#050b0d;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 20px;
+    margin-bottom:35px;
+}
+
+.top-menu{
+    display:flex;
+    gap:28px;
+}
+
+.top-menu span{
+    color:#9ca6a7;
+    font-size:13px;
+    cursor:pointer;
+}
+
+.top-menu span:hover{
+    color:#b8ff00;
+}
+
+.user{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.user-info{
+    text-align:right;
+}
+
+.user-info strong{
+    display:block;
+    font-size:13px;
+}
+
+.user-info small{
+    color:#7cff00;
+}
+
+.user-avatar{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:#333;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.title h2{
+    font-size:32px;
+    letter-spacing:-1px;
+}
+
+.title h2::after{
+    content:"";
+    display:block;
+    width:32px;
+    height:4px;
+    background:#b8ff00;
+    margin-top:8px;
+    border-radius:5px;
+}
+
+.title p{
+    color:#7e8a8b;
+    margin-top:10px;
+    font-size:14px;
+}
+
+/* =========================
+   CONTROLES
+========================= */
+
+.controls{
+    display:flex;
+    gap:12px;
+}
+
+.search{
+    width:300px;
+    background:#071012;
+    border:1px solid #243638;
+    border-radius:8px;
+    padding:12px 15px;
+    color:#fff;
+    outline:none;
+}
+
+.search:focus{
+    border-color:#b8ff00;
+}
+
+.select{
+    background:#071012;
+    border:1px solid #243638;
+    border-radius:8px;
+    color:#fff;
+    padding:12px;
+    outline:none;
+}
+
+.refresh{
+    background:#0c1718;
+    border:1px solid #527000;
+    color:#b8ff00;
+    border-radius:8px;
+    padding:0 18px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.refresh:hover{
+    background:#162400;
+}
+
+/* =========================
+   TABS
+========================= */
+
+.tabs{
+    display:flex;
+    gap:5px;
+    margin-bottom:15px;
+}
+
+.tab{
+    border:1px solid #1d3032;
+    background:#071012;
+    color:#889495;
+    padding:10px 18px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.tab.active{
+    border-color:#b8ff00;
+    color:#b8ff00;
+}
+
+/* =========================
+   TABLA
+========================= */
+
+.table-container{
+    border:1px solid #1b3032;
+    border-radius:10px;
+    overflow:hidden;
+    background:#061012;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+thead{
+    background:#081517;
+}
+
+th{
+    color:#b8ff00;
+    font-size:11px;
+    text-align:left;
+    padding:15px 12px;
+    white-space:nowrap;
+}
+
+td{
+    padding:12px;
+    border-top:1px solid #152729;
+    font-size:14px;
+}
+
+tr{
+    transition:.2s;
+}
+
+tbody tr:hover{
+    background:#0b191b;
+}
+
+/* =========================
+   POSICIONES
+========================= */
+
+.rank{
+    font-size:20px;
+    font-weight:bold;
+}
+
+.rank.top1{
+    color:#ffd700;
+}
+
+.rank.top2{
+    color:#c9d0d3;
+}
+
+.rank.top3{
+    color:#cd7f32;
+}
+
+/* =========================
+   JUGADOR
+========================= */
+
+.player{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.avatar{
+    width:50px;
+    height:50px;
+    border-radius:8px;
+    object-fit:cover;
+    background:#202829;
+    border:1px solid #344546;
+}
+
+.player-name{
+    font-size:17px;
+    font-weight:bold;
+}
+
+.country{
+    color:#9ba7a8;
+    font-size:12px;
+    margin-top:5px;
+}
+
+.flag{
+    margin-right:5px;
+}
+
+/* =========================
+   ELO
+========================= */
+
+.elo{
+    color:#b8ff00;
+    font-size:23px;
+    font-weight:bold;
+}
+
+.elo-change{
+    display:inline-block;
+    margin-left:7px;
+    padding:5px 7px;
+    border-radius:4px;
+    font-size:11px;
+}
+
+.positive{
+    color:#8cff00;
+    background:#11240b;
+    border:1px solid #2e5a16;
+}
+
+.negative{
+    color:#ff4d4d;
+    background:#291010;
+    border:1px solid #622020;
+}
+
+.neutral{
+    color:#aaa;
+    background:#182022;
+}
+
+/* =========================
+   RACHA
+========================= */
+
+.streak{
+    color:#b8ff00;
+    font-weight:bold;
+}
+
+.fire{
+    font-size:18px;
+}
+
+/* =========================
+   RESULTADO
+========================= */
+
+.result{
+    padding:5px 8px;
+    border-radius:4px;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.win{
+    color:#b8ff00;
+    background:#10240a;
+    border:1px solid #315719;
+}
+
+.loss{
+    color:#ff5555;
+    background:#281010;
+    border:1px solid #5d2222;
+}
+
+.last-match{
+    color:#9ba5a6;
+    font-size:11px;
+    margin-top:5px;
+}
+
+/* =========================
+   FOOTER TABLA
+========================= */
+
+.table-footer{
+    padding:15px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:#899596;
+    font-size:12px;
+}
+
+.pagination{
+    display:flex;
+    gap:5px;
+}
+
+.pagination button{
+    background:#0b1719;
+    color:#aeb8b9;
+    border:1px solid #203335;
+    padding:7px 12px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.pagination button.active{
+    background:#b8ff00;
+    color:#081000;
+    border-color:#b8ff00;
+    font-weight:bold;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:1100px){
+
+    .sidebar{
+        width:210px;
+    }
+
+    .main{
+        margin-left:210px;
+        width:calc(100% - 210px);
+        padding:20px;
+    }
+
+    .top-menu{
+        display:none;
+    }
+
+    .controls{
+        flex-wrap:wrap;
+    }
+
+}
+
+@media(max-width:800px){
+
+    .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
+        min-height:auto;
+    }
+
+    .app{
+        display:block;
+    }
+
+    .main{
+        margin-left:0;
+        width:100%;
+        padding:15px;
+    }
+
+    .menu{
+        display:grid;
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .general{
+        display:none;
+    }
+
+    .header{
+        display:block;
+    }
+
+    .controls{
+        margin-top:20px;
+    }
+
+    .search{
+        width:100%;
+    }
+
+    .table-container{
+        overflow-x:auto;
+    }
+
+    table{
+        min-width:950px;
+    }
+
+}
+
+
+/* =========================
+   MODULO DE PARTIDAS / ELO
+========================= */
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.78);
+    backdrop-filter:blur(6px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:20px;
+}
+
+.modal-overlay.show{
+    display:flex;
+}
+
+.elo-modal{
+    width:min(760px,100%);
+    background:linear-gradient(145deg,#071214,#030809);
+    border:1px solid #304448;
+    border-radius:14px;
+    box-shadow:0 25px 80px rgba(0,0,0,.65);
+    overflow:hidden;
+}
+
+.modal-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:20px 24px;
+    border-bottom:1px solid #193033;
+}
+
+.modal-head h3{
+    font-size:21px;
+    color:#fff;
+}
+
+.modal-head h3 span{
+    color:#b8ff00;
+}
+
+.close-modal{
+    width:36px;
+    height:36px;
+    border-radius:7px;
+    border:1px solid #304448;
+    background:#0b1719;
+    color:#fff;
+    cursor:pointer;
+    font-size:18px;
+}
+
+.close-modal:hover{
+    color:#b8ff00;
+    border-color:#b8ff00;
+}
+
+.match-form{
+    padding:24px;
+}
+
+.match-grid{
+    display:grid;
+    grid-template-columns:1fr 70px 1fr;
+    gap:15px;
+    align-items:end;
+}
+
+.match-card{
+    background:#091719;
+    border:1px solid #203638;
+    border-radius:10px;
+    padding:16px;
+}
+
+.match-card label{
+    display:block;
+    color:#8b999a;
+    font-size:11px;
+    margin-bottom:8px;
+}
+
+.match-card select{
+    width:100%;
+    background:#050c0e;
+    border:1px solid #304448;
+    border-radius:7px;
+    color:#fff;
+    padding:12px;
+    outline:none;
+}
+
+.match-card select:focus{
+    border-color:#b8ff00;
+}
+
+.match-elo{
+    text-align:center;
+    margin-top:12px;
+    color:#b8ff00;
+    font-weight:bold;
+    font-size:20px;
+}
+
+.vs{
+    text-align:center;
+    color:#667576;
+    font-weight:bold;
+    padding-bottom:14px;
+}
+
+.score-area{
+    margin-top:20px;
+}
+
+.score-area h4{
+    color:#aeb9ba;
+    font-size:12px;
+    margin-bottom:10px;
+}
+
+.result-buttons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.result-btn{
+    padding:14px;
+    border-radius:8px;
+    border:1px solid #304448;
+    background:#091719;
+    color:#aeb9ba;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.result-btn:hover{
+    border-color:#b8ff00;
+    color:#b8ff00;
+}
+
+.result-btn.selected{
+    background:#122408;
+    border-color:#b8ff00;
+    color:#b8ff00;
+}
+
+.score-inputs{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:12px;
+}
+
+.score-inputs input{
+    width:100%;
+    background:#050c0e;
+    border:1px solid #304448;
+    border-radius:7px;
+    color:#fff;
+    padding:12px;
+    outline:none;
+}
+
+.elo-preview{
+    margin-top:18px;
+    border:1px solid #263b3d;
+    background:#061012;
+    border-radius:9px;
+    padding:15px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.preview-box{
+    text-align:center;
+}
+
+.preview-box small{
+    display:block;
+    color:#7e8c8d;
+    font-size:10px;
+    margin-bottom:5px;
+}
+
+.preview-box strong{
+    color:#b8ff00;
+    font-size:22px;
+}
+
+.preview-change{
+    margin-left:6px;
+    font-size:12px;
+}
+
+.preview-positive{ color:#8cff00; }
+.preview-negative{ color:#ff5555; }
+
+.register-match{
+    width:100%;
+    margin-top:18px;
+    padding:14px;
+    border:0;
+    border-radius:8px;
+    background:#b8ff00;
+    color:#081000;
+    font-weight:bold;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.register-match:hover{
+    background:#d0ff55;
+}
+
+.elo-help{
+    margin-top:12px;
+    color:#718081;
+    font-size:11px;
+    line-height:1.5;
+    text-align:center;
+}
+
+.match-success{
+    display:none;
+    margin-top:14px;
+    padding:12px;
+    border:1px solid #315719;
+    background:#10240a;
+    color:#b8ff00;
+    border-radius:7px;
+    text-align:center;
+    font-size:12px;
+}
+
+@media(max-width:650px){
+    .match-grid{
+        grid-template-columns:1fr;
+    }
+
+    .vs{
+        padding:0;
+    }
+
+    .elo-preview{
+        grid-template-columns:1fr;
+    }
+}
+
+
+/* =========================
+   MODULO JUGADORES
+========================= */
+
+/* =========================
+   PERFIL PERSONALIZABLE
+========================= */
+
+.country{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    color:#aeb9ba;
+    font-size:12px;
+    margin-top:5px;
+}
+
+.country .flag{
+    font-size:20px;
+    line-height:1;
+    margin-right:0;
+}
+
+.profile-preview-country{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.profile-country-flag{
+    font-size:28px;
+    line-height:1;
+}
+
+
+.profile-edit-quick{
+    border:1px solid #527000;
+    background:#10240a;
+    color:#b8ff00;
+    border-radius:7px;
+    padding:9px 12px;
+    cursor:pointer;
+    font-size:11px;
+    font-weight:bold;
+}
+
+.profile-edit-quick:hover{
+    background:#18320d;
+    border-color:#b8ff00;
+}
+
+.profile-view-mode .profile-edit-grid{
+    display:none;
+}
+
+.profile-view-mode .profile-actions{
+    display:none;
+}
+
+.profile-view-mode .profile-body{
+    padding-bottom:24px;
+}
+
+.profile-view-mode .profile-preview{
+    margin-bottom:0;
+}
+
+
+.profile-photo-upload{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.profile-photo-preview{
+    width:58px;
+    height:58px;
+    border-radius:10px;
+    overflow:hidden;
+    border:1px solid #304448;
+    background:#182224;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:25px;
+    flex:none;
+}
+
+.profile-photo-preview img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.profile-photo-controls{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    min-width:0;
+}
+
+.profile-photo-controls input{
+    width:100%;
+}
+
+.remove-photo-btn{
+    width:max-content;
+    border:1px solid #612323;
+    background:#220d0d;
+    color:#ff5a5a;
+    border-radius:6px;
+    padding:7px 10px;
+    cursor:pointer;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.remove-photo-btn:hover{
+    background:#351010;
+    border-color:#ff4444;
+}
+
+.avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:7px;
+}
+
+
+.profile-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.82);
+    backdrop-filter:blur(7px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:120;
+    padding:20px;
+}
+
+.profile-overlay.show{
+    display:flex;
+}
+
+.profile-modal{
+    width:min(900px,100%);
+    max-height:92vh;
+    overflow:auto;
+    background:linear-gradient(145deg,#071214,#030809);
+    border:1px solid #304448;
+    border-radius:14px;
+    box-shadow:0 25px 80px rgba(0,0,0,.75);
+}
+
+.profile-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:20px 24px;
+    border-bottom:1px solid #193033;
+    position:sticky;
+    top:0;
+    z-index:3;
+    background:#071214;
+}
+
+.profile-head h3{
+    font-size:21px;
+}
+
+.profile-head h3 span{
+    color:#b8ff00;
+}
+
+.profile-close{
+    width:36px;
+    height:36px;
+    border-radius:7px;
+    border:1px solid #304448;
+    background:#0b1719;
+    color:#fff;
+    cursor:pointer;
+    font-size:18px;
+}
+
+.profile-body{
+    padding:24px;
+}
+
+.profile-preview{
+    display:grid;
+    grid-template-columns:180px 1fr;
+    gap:22px;
+    padding:20px;
+    border:1px solid #203638;
+    border-radius:12px;
+    background:linear-gradient(145deg,#091719,#050b0d);
+    margin-bottom:22px;
+}
+
+.profile-avatar-large{
+    width:150px;
+    height:150px;
+    border-radius:16px;
+    background:#182224;
+    border:2px solid #b8ff00;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:65px;
+    margin:auto;
+    overflow:hidden;
+}
+
+.profile-avatar-large img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.profile-preview-info{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.profile-preview-name{
+    font-size:30px;
+    font-weight:800;
+}
+
+.profile-preview-country{
+    color:#a4b0b1;
+    margin-top:7px;
+}
+
+.profile-preview-nick{
+    color:#b8ff00;
+    margin-top:10px;
+    font-size:13px;
+}
+
+.profile-preview-bio{
+    color:#879596;
+    margin-top:12px;
+    line-height:1.5;
+    font-size:13px;
+}
+
+.profile-stats-preview{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:18px;
+}
+
+.profile-mini-stat{
+    border:1px solid #203638;
+    background:#061012;
+    padding:9px 12px;
+    border-radius:7px;
+}
+
+.profile-mini-stat small{
+    display:block;
+    color:#748283;
+    font-size:9px;
+}
+
+.profile-mini-stat strong{
+    color:#b8ff00;
+    font-size:16px;
+}
+
+.profile-edit-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.profile-field{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.profile-field.full{
+    grid-column:1/-1;
+}
+
+.profile-field label{
+    color:#899697;
+    font-size:11px;
+    text-transform:uppercase;
+}
+
+.profile-field input,
+.profile-field select,
+.profile-field textarea{
+    background:#050c0e;
+    border:1px solid #304448;
+    border-radius:7px;
+    color:#fff;
+    padding:12px;
+    outline:none;
+    font-family:inherit;
+}
+
+.profile-field textarea{
+    min-height:90px;
+    resize:vertical;
+}
+
+.profile-field input:focus,
+.profile-field select:focus,
+.profile-field textarea:focus{
+    border-color:#b8ff00;
+}
+
+.profile-avatar-help{
+    color:#667576;
+    font-size:10px;
+    line-height:1.4;
+}
+
+.profile-actions{
+    display:flex;
+    gap:10px;
+    margin-top:18px;
+}
+
+.save-profile-btn{
+    flex:1;
+    padding:14px;
+    border:0;
+    border-radius:8px;
+    background:#b8ff00;
+    color:#081000;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.cancel-profile-btn{
+    padding:14px 22px;
+    border:1px solid #304448;
+    border-radius:8px;
+    background:#0b1719;
+    color:#aeb9ba;
+    cursor:pointer;
+}
+
+.profile-message{
+    display:none;
+    margin-top:12px;
+    padding:11px;
+    border-radius:7px;
+    background:#10240a;
+    border:1px solid #315719;
+    color:#b8ff00;
+    text-align:center;
+    font-size:12px;
+}
+
+.player-clickable{
+    cursor:pointer;
+}
+
+.player-clickable:hover .player-name{
+    color:#b8ff00;
+}
+
+@media(max-width:650px){
+    .profile-preview{
+        grid-template-columns:1fr;
+        text-align:center;
+    }
+
+    .profile-edit-grid{
+        grid-template-columns:1fr;
+    }
+
+    .profile-field.full{
+        grid-column:auto;
+    }
+
+    .profile-actions{
+        flex-direction:column;
+    }
+
+    .profile-preview-name{
+        font-size:24px;
+    }
+}
+
+
+.edit-player-btn{
+    border:1px solid #315719;
+    background:#10240a;
+    color:#b8ff00;
+    border-radius:6px;
+    padding:8px 11px;
+    cursor:pointer;
+    font-size:11px;
+    font-weight:bold;
+}
+
+.edit-player-btn:hover{
+    background:#17320d;
+    border-color:#b8ff00;
+}
+
+.edit-country-row{
+    display:none;
+    margin-top:9px;
+    padding-top:9px;
+    border-top:1px solid #1d3032;
+    gap:7px;
+    align-items:center;
+}
+
+.edit-country-row.show{
+    display:flex;
+}
+
+.edit-country-select{
+    flex:1;
+    min-width:0;
+    background:#050c0e;
+    border:1px solid #304448;
+    border-radius:6px;
+    color:#fff;
+    padding:8px;
+    outline:none;
+    font-size:11px;
+}
+
+.edit-country-select:focus{
+    border-color:#b8ff00;
+}
+
+.save-country-btn{
+    border:1px solid #527000;
+    background:#b8ff00;
+    color:#081000;
+    border-radius:6px;
+    padding:8px 10px;
+    cursor:pointer;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.cancel-country-btn{
+    border:1px solid #304448;
+    background:#0b1719;
+    color:#aeb9ba;
+    border-radius:6px;
+    padding:8px 10px;
+    cursor:pointer;
+    font-size:10px;
+}
+
+@media(max-width:650px){
+    .edit-country-row{
+        flex-wrap:wrap;
+    }
+
+    .edit-country-select{
+        flex-basis:100%;
+    }
+}
+
+
+.player-list-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.delete-player-btn{
+    border:1px solid #612323;
+    background:#220d0d;
+    color:#ff5a5a;
+    border-radius:6px;
+    padding:8px 11px;
+    cursor:pointer;
+    font-size:11px;
+    font-weight:bold;
+}
+
+.delete-player-btn:hover{
+    background:#351010;
+    border-color:#ff4444;
+    color:#ff7777;
+}
+
+.delete-warning{
+    margin:0 24px 20px;
+    padding:12px;
+    border:1px solid #5b4a19;
+    background:#191607;
+    color:#d8c477;
+    border-radius:7px;
+    font-size:11px;
+    line-height:1.5;
+}
+
+
+.players-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.78);
+    backdrop-filter:blur(6px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:110;
+    padding:20px;
+}
+
+.players-overlay.show{
+    display:flex;
+}
+
+.players-modal{
+    width:min(820px,100%);
+    max-height:90vh;
+    overflow:auto;
+    background:linear-gradient(145deg,#071214,#030809);
+    border:1px solid #304448;
+    border-radius:14px;
+    box-shadow:0 25px 80px rgba(0,0,0,.7);
+}
+
+.players-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:20px 24px;
+    border-bottom:1px solid #193033;
+    position:sticky;
+    top:0;
+    background:#071214;
+    z-index:2;
+}
+
+.players-head h3{
+    font-size:21px;
+}
+
+.players-head h3 span{
+    color:#b8ff00;
+}
+
+.players-close{
+    width:36px;
+    height:36px;
+    border-radius:7px;
+    border:1px solid #304448;
+    background:#0b1719;
+    color:#fff;
+    cursor:pointer;
+    font-size:18px;
+}
+
+.players-close:hover{
+    color:#b8ff00;
+    border-color:#b8ff00;
+}
+
+.player-form{
+    padding:24px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.player-field{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.player-field.full{
+    grid-column:1/-1;
+}
+
+.player-field label{
+    color:#899697;
+    font-size:11px;
+    text-transform:uppercase;
+}
+
+.player-field input,
+.player-field select{
+    background:#050c0e;
+    border:1px solid #304448;
+    border-radius:7px;
+    color:#fff;
+    padding:12px;
+    outline:none;
+}
+
+.player-field input:focus,
+.player-field select:focus{
+    border-color:#b8ff00;
+}
+
+.player-actions{
+    grid-column:1/-1;
+    display:flex;
+    gap:10px;
+    margin-top:5px;
+}
+
+.add-player-btn{
+    flex:1;
+    padding:14px;
+    border:0;
+    border-radius:8px;
+    background:#b8ff00;
+    color:#081000;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.add-player-btn:hover{
+    background:#d0ff55;
+}
+
+.cancel-player-btn{
+    padding:14px 22px;
+    border:1px solid #304448;
+    border-radius:8px;
+    background:#0b1719;
+    color:#aeb9ba;
+    cursor:pointer;
+}
+
+.cancel-player-btn:hover{
+    color:#fff;
+    border-color:#667879;
+}
+
+.players-list{
+    padding:0 24px 24px;
+}
+
+.players-list h4{
+    color:#b8ff00;
+    font-size:12px;
+    margin-bottom:12px;
+}
+
+.player-list-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    padding:12px;
+    border:1px solid #1d3032;
+    background:#061012;
+    border-radius:8px;
+    margin-bottom:7px;
+}
+
+.player-list-info{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.player-list-avatar{
+    width:42px;
+    height:42px;
+    border-radius:8px;
+    background:#182224;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:1px solid #304448;
+}
+
+.player-list-name{
+    font-weight:bold;
+}
+
+.player-list-country{
+    color:#7f8d8e;
+    font-size:11px;
+    margin-top:3px;
+}
+
+.player-list-elo{
+    color:#b8ff00;
+    font-weight:bold;
+}
+
+.player-success{
+    grid-column:1/-1;
+    display:none;
+    padding:12px;
+    border-radius:7px;
+    background:#10240a;
+    border:1px solid #315719;
+    color:#b8ff00;
+    text-align:center;
+    font-size:12px;
+}
+
+@media(max-width:650px){
+    .player-form{
+        grid-template-columns:1fr;
+    }
+
+    .player-field.full,
+    .player-actions,
+    .player-success{
+        grid-column:auto;
+    }
+
+    .player-actions{
+        flex-direction:column;
+    }
+}
+
+
+.flag-img{
+    width:22px;
+    height:22px;
+    object-fit:contain;
+    vertical-align:middle;
+    flex:none;
+}
+
+.profile-country-flag img{
+    width:32px;
+    height:32px;
+    object-fit:contain;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- =========================
+     SIDEBAR
+========================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <div class="ball">8</div>
+
+        <h1>
+            RANKING<br>
+            <span>8BP</span>
+        </h1>
+
+        <small>WORLD ELO RANKING</small>
+
+    </div>
+
+
+    <div class="menu">
+
+        <button class="active">
+            🏆 &nbsp; RANKING MUNDIAL
+        </button>
+
+        <button>
+            👥 &nbsp; TOP JUGADORES
+        </button>
+
+        <button>
+            👤 &nbsp; NUEVOS JUGADORES
+        </button>
+
+        <button>
+            🎱 &nbsp; HISTORIAL DE PARTIDAS
+        </button>
+
+        <button>
+            📊 &nbsp; ESTADÍSTICAS
+        </button>
+
+        <button>
+            🏆 &nbsp; RÉCORDS
+        </button>
+
+        <button>
+            🌎 &nbsp; PAÍSES
+        </button>
+
+        <button>
+            📜 &nbsp; REGLAMENTO
+        </button>
+
+    </div>
+
+
+    <div class="general">
+
+        <h3>DATOS GENERALES</h3>
+
+        <div class="stat-side">
+            <span>👥 JUGADORES REGISTRADOS</span>
+            <strong id="totalPlayers">128</strong>
+        </div>
+
+        <div class="stat-side">
+            <span>🎱 PARTIDAS JUGADAS</span>
+            <strong id="totalMatches">342</strong>
+        </div>
+
+        <div class="stat-side">
+            <span>📊 PROMEDIO ELO</span>
+            <strong id="averageElo">987</strong>
+        </div>
+
+        <div class="stat-side">
+            <span>🕐 ACTUALIZADO</span>
+            <strong id="updateTime">AHORA</strong>
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="main">
+
+
+    <!-- TOPBAR -->
+
+    <div class="topbar">
+
+        <div class="top-menu">
+
+            <span>INICIO</span>
+            <span style="color:#b8ff00;">RANKING</span>
+            <span>JUGADORES</span>
+            <span>PARTIDAS</span>
+            <span>ESTADÍSTICAS</span>
+            <span>RÉCORDS</span>
+            <span>TORNEOS</span>
+
+        </div>
+
+        <div class="user">
+
+            <div class="user-info">
+                <strong>IKAR8BP</strong>
+                <small>ADMIN</small>
+            </div>
+
+            <div class="user-avatar">
+                👤
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="title">
+
+            <h2>RANKING MUNDIAL</h2>
+
+            <p>
+                CLASIFICACIÓN OFICIAL POR ELO
+            </p>
+
+        </div>
+
+
+        <div class="controls">
+
+            <input
+                type="text"
+                id="search"
+                class="search"
+                placeholder="Buscar jugador..."
+            >
+
+            <select id="countryFilter" class="select">
+
+                <option value="">🌎 TODOS LOS PAÍSES</option>
+                <option value="Ecuador">🇪🇨 Ecuador</option>
+                <option value="México">🇲🇽 México</option>
+                <option value="Colombia">🇨🇴 Colombia</option>
+                <option value="Perú">🇵🇪 Perú</option>
+                <option value="Argentina">🇦🇷 Argentina</option>
+                <option value="España">🇪🇸 España</option>
+                <option value="Venezuela">🇻🇪 Venezuela</option>
+
+            </select>
+
+            <button class="refresh" onclick="actualizar()">
+                🔄 ACTUALIZAR
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- TABS -->
+
+    <div class="tabs">
+
+        <button class="tab active">
+            ELO RANKING
+        </button>
+
+        <button class="tab">
+            TOP WIN RATE
+        </button>
+
+        <button class="tab">
+            MÁS VICTORIAS
+        </button>
+
+        <button class="tab">
+            RACHA
+        </button>
+
+        <button class="tab">
+            PAÍSES
+        </button>
+
+    </div>
+
+
+    <!-- TABLA -->
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+
+                    <th>JUGADOR</th>
+
+                    <th>RANKING (ELO)</th>
+
+                    <th>G / P</th>
+
+                    <th>P</th>
+
+                    <th>RACHA</th>
+
+                    <th>ÚLTIMA PARTIDA</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="rankingBody">
+
+            </tbody>
+
+        </table>
+
+
+        <div class="table-footer">
+
+            <span id="showing">
+                Mostrando 1 a 10 jugadores
+            </span>
+
+            <div class="pagination">
+
+                <button>Anterior</button>
+
+                <button class="active">1</button>
+
+                <button>2</button>
+
+                <button>3</button>
+
+                <button>Siguiente</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+</div>
+
+
+<!-- Firebase: sincronización en tiempo real -->
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-database-compat.js"></script>
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyAewmp-duXpfMyL9MenMGxKOAGuUi96phs",
+        authDomain: "raking8bp.firebaseapp.com",
+        databaseURL: "https://raking8bp-default-rtdb.firebaseio.com",
+        projectId: "raking8bp",
+        storageBucket: "raking8bp.firebasestorage.app",
+        messagingSenderId: "448167900361",
+        appId: "1:448167900361:web:9eaa6b20b0fa21108bc918",
+        measurementId: "G-HVR8GD1RF1"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const rankingDB = firebase.database();
+    const rankingRef = rankingDB.ref("jugadores");
+</script>
+
+<script>
+
+/* =====================================
+   DATOS DE JUGADORES
+===================================== */
+
+const jugadores = [
+
+{
+    nombre:"EMANUEL",
+    pais:"Ecuador",
+    bandera:"🇪🇨",
+    elo:1032,
+    cambio:16,
+    ganadas:1,
+    perdidas:0,
+    racha:1,
+    resultado:"VICTORIA",
+    rival:"JUANJO",
+    tiempo:"2h atrás"
+},
+
+{
+    nombre:"DELVIN",
+    pais:"Rep. Dominicana",
+    bandera:"🇩🇴",
+    elo:1016,
+    cambio:16,
+    ganadas:1,
+    perdidas:0,
+    racha:1,
+    resultado:"VICTORIA",
+    rival:"MARTIN R 8BP",
+    tiempo:"3h atrás"
+},
+
+{
+    nombre:"CHANEKE",
+    pais:"Colombia",
+    bandera:"🇨🇴",
+    elo:1016,
+    cambio:16,
+    ganadas:1,
+    perdidas:0,
+    racha:1,
+    resultado:"VICTORIA",
+    rival:"RICH",
+    tiempo:"5h atrás"
+},
+
+{
+    nombre:"FONSECA",
+    pais:"México",
+    bandera:"🇲🇽",
+    elo:1016,
+    cambio:16,
+    ganadas:1,
+    perdidas:0,
+    racha:1,
+    resultado:"VICTORIA",
+    rival:"HECTOR",
+    tiempo:"6h atrás"
+},
+
+{
+    nombre:"MARTIN R 8BP",
+    pais:"Perú",
+    bandera:"🇵🇪",
+    elo:1000,
+    cambio:0,
+    ganadas:0,
+    perdidas:0,
+    racha:0,
+    resultado:"---",
+    rival:"",
+    tiempo:"--"
+},
+
+{
+    nombre:"CISNERO",
+    pais:"España",
+    bandera:"🇪🇸",
+    elo:1000,
+    cambio:0,
+    ganadas:1,
+    perdidas:1,
+    racha:-1,
+    resultado:"DERROTA",
+    rival:"DELVIN",
+    tiempo:"1h atrás"
+},
+
+{
+    nombre:"RICH",
+    pais:"Argentina",
+    bandera:"🇦🇷",
+    elo:984,
+    cambio:-16,
+    ganadas:0,
+    perdidas:1,
+    racha:-1,
+    resultado:"DERROTA",
+    rival:"CHANEKE",
+    tiempo:"4h atrás"
+},
+
+{
+    nombre:"JUANJO",
+    pais:"Venezuela",
+    bandera:"🇻🇪",
+    elo:984,
+    cambio:-16,
+    ganadas:0,
+    perdidas:1,
+    racha:-1,
+    resultado:"DERROTA",
+    rival:"EMANUEL",
+    tiempo:"2h atrás"
+},
+
+{
+    nombre:"CRAZY",
+    pais:"Chile",
+    bandera:"🇨🇱",
+    elo:984,
+    cambio:-16,
+    ganadas:0,
+    perdidas:1,
+    racha:-1,
+    resultado:"DERROTA",
+    rival:"FONSECA",
+    tiempo:"3h atrás"
+},
+
+{
+    nombre:"HECTOR",
+    pais:"México",
+    bandera:"🇲🇽",
+    elo:968,
+    cambio:-32,
+    ganadas:0,
+    perdidas:2,
+    racha:-2,
+    resultado:"DERROTA",
+    rival:"FONSECA",
+    tiempo:"6h atrás"
+}
+
+];
+
+
+/* =====================================
+   MOSTRAR RANKING
+===================================== */
+
+function mostrarRanking(lista){
+
+    const body =
+        document.getElementById("rankingBody");
+
+    body.innerHTML="";
+
+    lista.forEach((jugador,index)=>{
+
+        let posicion=index+1;
+
+        let cambioClass="neutral";
+
+        if(jugador.cambio>0)
+            cambioClass="positive";
+
+        if(jugador.cambio<0)
+            cambioClass="negative";
+
+
+        let cambioTexto="";
+
+        if(jugador.cambio>0)
+            cambioTexto="▲ "+jugador.cambio;
+
+        else if(jugador.cambio<0)
+            cambioTexto="▼ "+Math.abs(jugador.cambio);
+
+        else
+            cambioTexto="0";
+
+
+        let rachaTexto =
+            jugador.racha>0
+            ? jugador.racha
+            : jugador.racha<0
+            ? jugador.racha
+            : "0";
+
+
+        let fuego =
+            jugador.racha>0
+            ? " 🔥"
+            : jugador.racha<0
+            ? " 🔥"
+            : "";
+
+
+        let resultadoHTML="";
+
+        if(jugador.resultado==="VICTORIA"){
+
+            resultadoHTML=`
+                <span class="result win">
+                    VICTORIA
+                </span>
+                <div class="last-match">
+                    vs ${jugador.rival}
+                </div>
+                <div class="last-match">
+                    ${jugador.tiempo}
+                </div>
+            `;
+
+        }
+
+        else if(jugador.resultado==="DERROTA"){
+
+            resultadoHTML=`
+                <span class="result loss">
+                    DERROTA
+                </span>
+                <div class="last-match">
+                    vs ${jugador.rival}
+                </div>
+                <div class="last-match">
+                    ${jugador.tiempo}
+                </div>
+            `;
+
+        }
+
+        else{
+
+            resultadoHTML=`
+                <span class="last-match">
+                    ---
+                </span>
+            `;
+
+        }
+
+
+        body.innerHTML+=`
+
+        <tr>
+
+            <td>
+
+                <span class="
+                    rank
+                    ${posicion===1 ? "top1":""}
+                    ${posicion===2 ? "top2":""}
+                    ${posicion===3 ? "top3":""}
+                ">
+
+                    ${posicion}
+
+                </span>
+
+            </td>
+
+
+            <td>
+
+                <div class="player">
+
+                    <div class="avatar">
+                        🎱
+                    </div>
+
+                    <div>
+
+                        <div class="player-name player-clickable"
+                             onclick="abrirPerfilRapidoPorNombre('${jugador.nombre.replace("'", "\'")}')">
+                            ${jugador.nombre}
+                        </div>
+
+                        <div class="country">
+
+                            <span class="flag">
+                                ${jugador.bandera}
+                            </span>
+
+                            ${jugador.pais}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </td>
+
+
+            <td>
+
+                <span class="elo">
+                    ${jugador.elo}
+                </span>
+
+                <span class="
+                    elo-change
+                    ${cambioClass}
+                ">
+
+                    ${cambioTexto}
+
+                </span>
+
+            </td>
+
+
+            <td>
+
+                ${jugador.ganadas}
+                /
+                ${jugador.perdidas}
+
+            </td>
+
+
+            <td>
+
+                <span style="
+                    color:${jugador.ganadas>=jugador.perdidas
+                    ? '#b8ff00'
+                    : '#ff5555'};
+                    font-size:20px;
+                ">
+
+                    ${jugador.ganadas>=jugador.perdidas
+                    ? "↑"
+                    : "↓"}
+
+                </span>
+
+            </td>
+
+
+            <td>
+
+                <span class="streak">
+
+                    ${rachaTexto}
+
+                    <span class="fire">
+                        ${fuego}
+                    </span>
+
+                </span>
+
+            </td>
+
+
+            <td>
+
+                ${resultadoHTML}
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+
+    document.getElementById("showing").innerText =
+        `Mostrando 1 a ${lista.length} jugadores`;
+
+}
+
+
+/* =====================================
+   BUSCADOR
+===================================== */
+
+function filtrar(){
+
+    const texto =
+        document
+        .getElementById("search")
+        .value
+        .toLowerCase();
+
+    const pais =
+        document
+        .getElementById("countryFilter")
+        .value;
+
+
+    const filtrados =
+        jugadores.filter(j=>{
+
+            const coincideNombre =
+                j.nombre
+                .toLowerCase()
+                .includes(texto);
+
+            const coincidePais =
+                pais===""
+                || j.pais===pais;
+
+            return coincideNombre && coincidePais;
+
+        });
+
+
+    mostrarRanking(filtrados);
+
+}
+
+
+document
+.getElementById("search")
+.addEventListener("input",filtrar);
+
+
+document
+.getElementById("countryFilter")
+.addEventListener("change",filtrar);
+
+
+/* =====================================
+   ACTUALIZAR
+===================================== */
+
+function actualizar(){
+
+    const boton =
+        document.querySelector(".refresh");
+
+    boton.innerHTML="⏳ ACTUALIZANDO...";
+
+    setTimeout(()=>{
+
+        boton.innerHTML="🔄 ACTUALIZADO";
+
+        document.getElementById("updateTime")
+        .innerText="AHORA";
+
+        setTimeout(()=>{
+
+            boton.innerHTML="🔄 ACTUALIZAR";
+
+        },1500);
+
+    },700);
+
+}
+
+
+/* =====================================
+   INICIO
+===================================== */
+
+mostrarRanking(jugadores);
+
+
+/* =====================================
+   SISTEMA ELO REAL
+===================================== */
+
+let ganadorSeleccionado = 0;
+
+const ELO_K = 32;
+
+function calcularEsperado(eloJugador, eloRival){
+    return 1 / (1 + Math.pow(10, (eloRival - eloJugador) / 400));
+}
+
+function calcularCambioElo(eloJugador, eloRival, resultado){
+    const esperado = calcularEsperado(eloJugador, eloRival);
+    return Math.round(ELO_K * (resultado - esperado));
+}
+
+function abrirPartidas(){
+
+    const modal = document.getElementById("matchModal");
+
+    cargarJugadoresEnSelect();
+
+    ganadorSeleccionado = 0;
+
+    document.getElementById("win1").classList.remove("selected");
+    document.getElementById("win2").classList.remove("selected");
+    document.getElementById("matchSuccess").style.display = "none";
+
+    modal.classList.add("show");
+
+    actualizarPreview();
+}
+
+function cerrarPartida(){
+    document.getElementById("matchModal").classList.remove("show");
+}
+
+function cargarJugadoresEnSelect(){
+
+    const select1 = document.getElementById("player1");
+    const select2 = document.getElementById("player2");
+
+    const actual1 = select1.value;
+    const actual2 = select2.value;
+
+    select1.innerHTML = "";
+    select2.innerHTML = "";
+
+    jugadores
+        .sort((a,b)=>b.elo-a.elo)
+        .forEach((jugador,index)=>{
+
+            const option1 = document.createElement("option");
+            option1.value = index;
+            option1.textContent = jugador.nombre + " — " + jugador.elo + " ELO";
+            select1.appendChild(option1);
+
+            const option2 = document.createElement("option");
+            option2.value = index;
+            option2.textContent = jugador.nombre + " — " + jugador.elo + " ELO";
+            select2.appendChild(option2);
+
+        });
+
+    if(actual1 !== "" && [...select1.options].some(o=>o.value===actual1))
+        select1.value = actual1;
+
+    if(actual2 !== "" && [...select2.options].some(o=>o.value===actual2))
+        select2.value = actual2;
+
+    if(select1.value === select2.value && select2.options.length > 1)
+        select2.selectedIndex = 1;
+}
+
+function seleccionarGanador(numero){
+
+    ganadorSeleccionado = numero;
+
+    document.getElementById("win1").classList.toggle(
+        "selected",
+        numero===1
+    );
+
+    document.getElementById("win2").classList.toggle(
+        "selected",
+        numero===2
+    );
+
+    actualizarPreview();
+}
+
+function actualizarPreview(){
+
+    const i1 = Number(document.getElementById("player1").value);
+    const i2 = Number(document.getElementById("player2").value);
+
+    const j1 = jugadores[i1];
+    const j2 = jugadores[i2];
+
+    if(!j1 || !j2) return;
+
+    document.getElementById("elo1").textContent = j1.elo + " ELO";
+    document.getElementById("elo2").textContent = j2.elo + " ELO";
+
+    document.getElementById("previewName1").textContent = j1.nombre;
+    document.getElementById("previewName2").textContent = j2.nombre;
+
+    document.getElementById("previewElo1").textContent = j1.elo;
+    document.getElementById("previewElo2").textContent = j2.elo;
+
+    let cambio1 = 0;
+    let cambio2 = 0;
+
+    if(ganadorSeleccionado === 1){
+
+        cambio1 = calcularCambioElo(j1.elo,j2.elo,1);
+        cambio2 = -cambio1;
+
+    }else if(ganadorSeleccionado === 2){
+
+        cambio2 = calcularCambioElo(j2.elo,j1.elo,1);
+        cambio1 = -cambio2;
+
+    }
+
+    pintarCambio("previewChange1",cambio1);
+    pintarCambio("previewChange2",cambio2);
+}
+
+function pintarCambio(id,cambio){
+
+    const elemento = document.getElementById(id);
+
+    elemento.textContent =
+        cambio > 0 ? "+" + cambio :
+        cambio < 0 ? cambio :
+        "0";
+
+    elemento.className =
+        "preview-change " +
+        (cambio>0
+            ? "preview-positive"
+            : cambio<0
+            ? "preview-negative"
+            : "");
+}
+
+function registrarPartida(){
+
+    const i1 = Number(document.getElementById("player1").value);
+    const i2 = Number(document.getElementById("player2").value);
+
+    if(i1 === i2){
+        alert("Debes seleccionar dos jugadores diferentes.");
+        return;
+    }
+
+    if(!ganadorSeleccionado){
+        alert("Selecciona quién ganó la partida.");
+        return;
+    }
+
+    const j1 = jugadores[i1];
+    const j2 = jugadores[i2];
+
+    const cambio1 = ganadorSeleccionado === 1
+        ? calcularCambioElo(j1.elo,j2.elo,1)
+        : calcularCambioElo(j1.elo,j2.elo,0);
+
+    const cambio2 = -cambio1;
+
+    const score1 = document.getElementById("score1").value;
+    const score2 = document.getElementById("score2").value;
+
+    const ganador = ganadorSeleccionado === 1 ? j1 : j2;
+    const perdedor = ganadorSeleccionado === 1 ? j2 : j1;
+
+    j1.elo += cambio1;
+    j2.elo += cambio2;
+
+    j1.cambio = cambio1;
+    j2.cambio = cambio2;
+
+    if(ganadorSeleccionado === 1){
+        j1.ganadas++;
+        j2.perdidas++;
+
+        j1.racha = j1.racha > 0 ? j1.racha + 1 : 1;
+        j2.racha = j2.racha < 0 ? j2.racha - 1 : -1;
+
+    }else{
+
+        j2.ganadas++;
+        j1.perdidas++;
+
+        j2.racha = j2.racha > 0 ? j2.racha + 1 : 1;
+        j1.racha = j1.racha < 0 ? j1.racha - 1 : -1;
+    }
+
+    j1.resultado = ganadorSeleccionado === 1 ? "VICTORIA" : "DERROTA";
+    j2.resultado = ganadorSeleccionado === 2 ? "VICTORIA" : "DERROTA";
+
+    j1.rival = j2.nombre;
+    j2.rival = j1.nombre;
+
+    j1.tiempo = "AHORA";
+    j2.tiempo = "AHORA";
+
+    const hora = new Date().toLocaleTimeString([],{
+        hour:"2-digit",
+        minute:"2-digit"
+    });
+
+    j1.ultimaPartida = hora;
+    j2.ultimaPartida = hora;
+
+    guardarDatos();
+
+    jugadores.sort((a,b)=>b.elo-a.elo);
+
+    mostrarRanking(jugadores);
+
+    const total = jugadores.reduce(
+        (s,j)=>s+j.ganadas+j.perdidas,0
+    ) / 2;
+
+    document.getElementById("totalMatches").textContent = Math.round(total);
+
+    const promedio = jugadores.reduce(
+        (s,j)=>s+j.elo,0
+    ) / jugadores.length;
+
+    document.getElementById("averageElo").textContent =
+        Math.round(promedio);
+
+    const success = document.getElementById("matchSuccess");
+
+    const marcador =
+        score1 !== "" && score2 !== ""
+        ? ` (${score1} - ${score2})`
+        : "";
+
+    success.innerHTML =
+        `✅ ${ganador.nombre} ganó${marcador}. ` +
+        `${ganador.nombre} ${ganador.elo} ELO ` +
+        `y ${perdedor.nombre} ${perdedor.elo} ELO.`;
+
+    success.style.display = "block";
+
+    cargarJugadoresEnSelect();
+    actualizarPreview();
+
+}
+
+function guardarDatos(){
+
+    if(typeof rankingRef === "undefined") return;
+
+    rankingRef.set(jugadores.map(j => ({...j})) )
+        .catch(error => {
+            console.error("Error guardando en Firebase:", error);
+            const msg = document.getElementById("matchSuccess") || document.getElementById("playerSuccess");
+            if(msg){
+                msg.textContent = "⚠️ No se pudo guardar en la base de datos.";
+                msg.style.display = "block";
+            }
+        });
+}
+
+function cargarDatos(){
+
+    if(typeof rankingRef === "undefined") return;
+
+    rankingRef.once("value")
+        .then(snapshot => {
+
+            if(!snapshot.exists()){
+
+                // Primera instalación: subimos los jugadores que ya existen en el HTML.
+                return rankingRef.set(jugadores.map(j => ({...j})));
+            }
+
+            const datos = snapshot.val();
+
+            if(Array.isArray(datos) && datos.length){
+                jugadores.length = 0;
+                datos.forEach(j => jugadores.push(j));
+            }else if(datos && typeof datos === "object"){
+                jugadores.length = 0;
+                Object.values(datos).forEach(j => jugadores.push(j));
+            }
+
+            jugadores.sort((a,b)=>b.elo-a.elo);
+            mostrarRanking(jugadores);
+
+            if(typeof actualizarDatosGenerales === "function") actualizarDatosGenerales();
+            if(typeof cargarJugadoresEnSelect === "function") cargarJugadoresEnSelect();
+            if(typeof cargarListaJugadores === "function") cargarListaJugadores();
+            if(typeof actualizarPreview === "function") actualizarPreview();
+        })
+        .catch(error => {
+            console.error("Error cargando Firebase:", error);
+            // Si Firebase falla, la página conserva los datos incluidos en el HTML.
+            mostrarRanking(jugadores);
+        });
+
+    // Escucha permanente: cualquier cambio hecho desde otro dispositivo
+    // se refleja automáticamente en esta página.
+    rankingRef.on("value", snapshot => {
+
+        if(!snapshot.exists()) return;
+
+        const datos = snapshot.val();
+        let lista = [];
+
+        if(Array.isArray(datos)){
+            lista = datos;
+        }else if(datos && typeof datos === "object"){
+            lista = Object.values(datos);
+        }
+
+        if(!lista.length) return;
+
+        jugadores.length = 0;
+        lista.forEach(j => jugadores.push(j));
+        jugadores.sort((a,b)=>b.elo-a.elo);
+
+        mostrarRanking(jugadores);
+
+        if(typeof actualizarDatosGenerales === "function") actualizarDatosGenerales();
+        if(typeof cargarJugadoresEnSelect === "function") cargarJugadoresEnSelect();
+        if(typeof cargarListaJugadores === "function") cargarListaJugadores();
+        if(typeof actualizarPreview === "function") actualizarPreview();
+    });
+}
+
+
+
+/* =====================================
+   CONECTAR BOTONES PARTIDAS
+===================================== */
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+    cargarDatos();
+
+    mostrarRanking(jugadores);
+
+    document
+        .querySelectorAll(".top-menu span")
+        .forEach(item=>{
+
+            if(item.textContent.trim()==="PARTIDAS"){
+
+                item.style.cursor="pointer";
+
+                item.addEventListener("click",abrirPartidas);
+
+            }
+
+        });
+
+    document
+        .querySelectorAll(".menu button")
+        .forEach(item=>{
+
+            if(item.textContent.includes("HISTORIAL DE PARTIDAS")){
+
+                item.addEventListener("click",abrirPartidas);
+
+            }
+
+        });
+
+});
+
+
+/* =====================================
+   GESTIÓN DE JUGADORES
+===================================== */
+
+function abrirJugadores(){
+
+    document.getElementById("playersModal").classList.add("show");
+
+    document.getElementById("playerSuccess").style.display="none";
+
+    cargarListaJugadores();
+
+}
+
+function cerrarJugadores(){
+
+    document.getElementById("playersModal").classList.remove("show");
+
+}
+
+function agregarJugador(){
+
+    const nombre =
+        document.getElementById("newPlayerName").value.trim();
+
+    const countrySelect =
+        document.getElementById("newPlayerCountry");
+
+    const pais = countrySelect.value;
+
+    const option =
+        countrySelect.options[countrySelect.selectedIndex];
+
+    const bandera =
+        option.dataset.flag || "🌎";
+
+    const eloInicial =
+        Number(document.getElementById("newPlayerElo").value) || 1000;
+
+    const avatar =
+        document.getElementById("newPlayerAvatar").value.trim() || "🎱";
+
+    if(!nombre){
+
+        alert("Escribe el nombre del jugador.");
+
+        return;
+    }
+
+    if(eloInicial < 100 || eloInicial > 3000){
+
+        alert("El ELO inicial debe estar entre 100 y 3000.");
+
+        return;
+    }
+
+    const existe =
+        jugadores.some(j =>
+            j.nombre.toLowerCase() === nombre.toLowerCase()
+        );
+
+    if(existe){
+
+        alert("Ese jugador ya existe.");
+
+        return;
+    }
+
+    jugadores.push({
+
+        nombre:nombre.toUpperCase(),
+
+        pais:pais,
+
+        bandera:bandera,
+
+        elo:eloInicial,
+
+        eloMaximo:eloInicial,
+
+        cambio:0,
+
+        ganadas:0,
+
+        perdidas:0,
+
+        racha:0,
+
+        resultado:"---",
+
+        rival:"",
+
+        tiempo:"--",
+
+        avatar:avatar
+
+    });
+
+    jugadores.sort((a,b)=>b.elo-a.elo);
+
+    guardarDatos();
+
+    mostrarRanking(jugadores);
+
+    actualizarDatosGenerales();
+
+    cargarListaJugadores();
+
+    document.getElementById("newPlayerName").value="";
+    document.getElementById("newPlayerElo").value="1000";
+    document.getElementById("newPlayerAvatar").value="";
+
+    const success =
+        document.getElementById("playerSuccess");
+
+    success.textContent =
+        `✅ ${nombre.toUpperCase()} fue agregado correctamente con ${eloInicial} ELO.`;
+
+    success.style.display="block";
+
+}
+
+function cargarListaJugadores(){
+
+    const lista =
+        document.getElementById("playersList");
+
+    lista.innerHTML="";
+
+    jugadores
+        .slice()
+        .sort((a,b)=>b.elo-a.elo)
+        .forEach((j,index)=>{
+
+            lista.innerHTML += `
+
+                <div class="player-list-row" style="display:block;">
+
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:15px;">
+
+                        <div class="player-list-info">
+
+                            <div class="player-list-avatar">
+                                ${j.avatar || "🎱"}
+                            </div>
+
+                            <div>
+
+                                <div class="player-list-name player-clickable"
+                                     onclick="abrirPerfilRapidoPorNombre('${j.nombre.replace("'", "\'")}')">
+                                    #${index+1} ${j.nombre}
+                                </div>
+
+                                <div class="player-list-country" id="country-${index}">
+                                    ${j.bandera} ${j.pais}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="player-list-actions">
+
+                            <div class="player-list-elo">
+                                ${j.elo} ELO
+                            </div>
+
+                            <button
+                                class="edit-player-btn"
+                                onclick="mostrarEditarPais(${index})">
+                                ✏️ PAÍS
+                            </button>
+
+                            <button
+                                class="delete-player-btn"
+                                onclick="borrarJugador('${j.nombre.replace(/'/g, "\'")}')">
+                                🗑 BORRAR
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="edit-country-row" id="edit-country-${index}">
+
+                        <select class="edit-country-select" id="country-select-${index}">
+                            ${opcionesPaisesHTML(j.pais)}
+                        </select>
+
+                        <button class="save-country-btn"
+                            onclick="guardarPais(${index})">
+                            ✓ GUARDAR
+                        </button>
+
+                        <button class="cancel-country-btn"
+                            onclick="ocultarEditarPais(${index})">
+                            CANCELAR
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+}
+
+function actualizarDatosGenerales(){
+
+    document.getElementById("totalPlayers").textContent =
+        jugadores.length;
+
+    const totalPartidas =
+        jugadores.reduce(
+            (total,j)=>total+j.ganadas+j.perdidas,
+            0
+        ) / 2;
+
+    document.getElementById("totalMatches").textContent =
+        Math.round(totalPartidas);
+
+    const promedio =
+        jugadores.reduce(
+            (total,j)=>total+j.elo,
+            0
+        ) / jugadores.length;
+
+    document.getElementById("averageElo").textContent =
+        Math.round(promedio);
+
+    document.getElementById("updateTime").textContent =
+        "AHORA";
+}
+
+
+/* =====================================
+   AVATAR DEL JUGADOR EN EL RANKING
+===================================== */
+
+const mostrarRankingOriginal = mostrarRanking;
+
+mostrarRanking = function(lista){
+
+    const body =
+        document.getElementById("rankingBody");
+
+    body.innerHTML="";
+
+    lista.forEach((jugador,index)=>{
+
+        let posicion=index+1;
+
+        let cambioClass="neutral";
+
+        if(jugador.cambio>0) cambioClass="positive";
+        if(jugador.cambio<0) cambioClass="negative";
+
+        let cambioTexto="";
+
+        if(jugador.cambio>0)
+            cambioTexto="▲ "+jugador.cambio;
+        else if(jugador.cambio<0)
+            cambioTexto="▼ "+Math.abs(jugador.cambio);
+        else
+            cambioTexto="0";
+
+        let fuego =
+            jugador.racha !== 0 ? " 🔥" : "";
+
+        let resultadoHTML="";
+
+        if(jugador.resultado==="VICTORIA"){
+
+            resultadoHTML=`
+                <span class="result win">VICTORIA</span>
+                <div class="last-match">vs ${jugador.rival}</div>
+                <div class="last-match">${jugador.tiempo}</div>
+            `;
+
+        }else if(jugador.resultado==="DERROTA"){
+
+            resultadoHTML=`
+                <span class="result loss">DERROTA</span>
+                <div class="last-match">vs ${jugador.rival}</div>
+                <div class="last-match">${jugador.tiempo}</div>
+            `;
+
+        }else{
+
+            resultadoHTML=`<span class="last-match">---</span>`;
+
+        }
+
+        body.innerHTML+=`
+
+        <tr>
+
+            <td>
+                <span class="
+                    rank
+                    ${posicion===1 ? "top1":""}
+                    ${posicion===2 ? "top2":""}
+                    ${posicion===3 ? "top3":""}
+                ">
+                    ${posicion}
+                </span>
+            </td>
+
+            <td>
+
+                <div class="player">
+
+                    <div class="avatar">
+                        ${jugador.foto
+                            ? `<img src="${jugador.foto}" alt="Foto de ${jugador.nombre}">`
+                            : (jugador.avatar || "🎱")}
+                    </div>
+
+                    <div>
+
+                        <div class="player-name">
+                            ${jugador.nombre}
+                        </div>
+
+                        <div class="country">
+                            <span class="flag">${jugador.bandera}</span>
+                            ${jugador.pais}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </td>
+
+            <td>
+
+                <span class="elo">${jugador.elo}</span>
+
+                <span class="elo-change ${cambioClass}">
+                    ${cambioTexto}
+                </span>
+
+            </td>
+
+            <td>
+                ${jugador.ganadas} / ${jugador.perdidas}
+            </td>
+
+            <td>
+
+                <span style="
+                    color:${jugador.ganadas>=jugador.perdidas
+                    ? '#b8ff00'
+                    : '#ff5555'};
+                    font-size:20px;
+                ">
+                    ${jugador.ganadas>=jugador.perdidas ? "↑" : "↓"}
+                </span>
+
+            </td>
+
+            <td>
+
+                <span class="streak">
+                    ${jugador.racha}
+                    <span class="fire">${fuego}</span>
+                </span>
+
+            </td>
+
+            <td>
+                ${resultadoHTML}
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+    document.getElementById("showing").innerText =
+        `Mostrando 1 a ${lista.length} jugadores`;
+
+};
+
+
+
+
+const paisesDisponibles = [
+    ["Ecuador","🇪🇨"],
+    ["México","🇲🇽"],
+    ["Colombia","🇨🇴"],
+    ["Perú","🇵🇪"],
+    ["Argentina","🇦🇷"],
+    ["España","🇪🇸"],
+    ["Venezuela","🇻🇪"],
+    ["Chile","🇨🇱"],
+    ["Brasil","🇧🇷"],
+    ["Rep. Dominicana","🇩🇴"],
+    ["Estados Unidos","🇺🇸"],
+    ["Bolivia","🇧🇴"],
+    ["Paraguay","🇵🇾"],
+    ["Uruguay","🇺🇾"],
+    ["Costa Rica","🇨🇷"],
+    ["Panamá","🇵🇦"],
+    ["Guatemala","🇬🇹"],
+    ["Honduras","🇭🇳"],
+    ["El Salvador","🇸🇻"],
+    ["Nicaragua","🇳🇮"],
+    ["Cuba","🇨🇺"],
+    ["Puerto Rico","🇵🇷"],
+    ["Canadá","🇨🇦"],
+    ["Francia","🇫🇷"],
+    ["Italia","🇮🇹"],
+    ["Alemania","🇩🇪"],
+    ["Portugal","🇵🇹"],
+    ["Reino Unido","🇬🇧"]
+];
+
+function opcionesPaisesHTML(paisActual){
+
+    return paisesDisponibles.map(p => `
+        <option value="${p[0]}" ${p[0]===paisActual ? "selected" : ""}>
+            ${p[1]} ${p[0]}
+        </option>
+    `).join("");
+
+}
+
+function mostrarEditarPais(index){
+
+    document
+        .querySelectorAll(".edit-country-row.show")
+        .forEach(row=>row.classList.remove("show"));
+
+    const row =
+        document.getElementById("edit-country-"+index);
+
+    if(row) row.classList.add("show");
+
+}
+
+function ocultarEditarPais(index){
+
+    const row =
+        document.getElementById("edit-country-"+index);
+
+    if(row) row.classList.remove("show");
+
+}
+
+function guardarPais(index){
+
+    const jugador = jugadores[index];
+
+    if(!jugador){
+
+        alert("No se encontró el jugador.");
+
+        return;
+
+    }
+
+    const select =
+        document.getElementById("country-select-"+index);
+
+    const nuevoPais = select.value;
+
+    const paisEncontrado =
+        paisesDisponibles.find(p=>p[0]===nuevoPais);
+
+    if(!paisEncontrado) return;
+
+    jugador.pais = paisEncontrado[0];
+    jugador.bandera = paisEncontrado[1];
+
+    guardarDatos();
+
+    jugadores.sort((a,b)=>b.elo-a.elo);
+
+    mostrarRanking(jugadores);
+
+    cargarListaJugadores();
+
+    actualizarDatosGenerales();
+
+}
+
+
+function borrarJugador(nombre){
+
+    const indice =
+        jugadores.findIndex(
+            j => j.nombre.toLowerCase() === nombre.toLowerCase()
+        );
+
+    if(indice === -1){
+        alert("No se encontró ese jugador.");
+        return;
+    }
+
+    const jugador = jugadores[indice];
+
+    const confirmar = confirm(
+        `¿Seguro que quieres borrar a ${jugador.nombre}?\n\n` +
+        `ELO: ${jugador.elo}\n` +
+        `Partidas: ${jugador.ganadas + jugador.perdidas}\n\n` +
+        `El jugador desaparecerá del ranking y de este navegador.`
+    );
+
+    if(!confirmar) return;
+
+    jugadores.splice(indice,1);
+
+    guardarDatos();
+
+    mostrarRanking(jugadores);
+
+    actualizarDatosGenerales();
+
+    cargarListaJugadores();
+
+    // Si estaba abierta la ventana de registrar partida,
+    // reconstruimos sus jugadores disponibles.
+    if(typeof cargarJugadoresEnSelect === "function"){
+        cargarJugadoresEnSelect();
+        actualizarPreview();
+    }
+
+    const success =
+        document.getElementById("playerSuccess");
+
+    success.textContent =
+        `🗑 ${jugador.nombre} fue eliminado del ranking.`;
+
+    success.style.display="block";
+}
+
+
+
+/* =====================================
+   EDICIÓN RÁPIDA DEL PERFIL
+===================================== */
+
+function activarEdicionPerfil(){
+
+    const modal =
+        document.getElementById("profileModal");
+
+    if(!modal) return;
+
+    modal.classList.remove("profile-view-mode");
+
+    // Lleva directamente a los campos editables.
+    const campo =
+        document.getElementById("editProfileName");
+
+    if(campo){
+
+        setTimeout(()=>{
+
+            campo.focus();
+
+            campo.scrollIntoView({
+                behavior:"smooth",
+                block:"center"
+            });
+
+        },100);
+
+    }
+
+}
+
+function abrirPerfilRapidoPorNombre(nombre){
+
+    abrirPerfilPorNombre(nombre);
+
+    setTimeout(()=>{
+
+        activarEdicionPerfil();
+
+    },150);
+
+}
+
+
+/* =====================================
+   PERFIL PERSONALIZABLE
+===================================== */
+
+let jugadorPerfilActual = null;
+
+function cargarOpcionesPaisPerfil(){
+
+    const select = document.getElementById("editProfileCountry");
+
+    if(select.options.length) return;
+
+    paisesDisponibles.forEach(p=>{
+
+        const option = document.createElement("option");
+
+        option.value = p[0];
+        option.textContent = p[1] + " " + p[0];
+
+        select.appendChild(option);
+
+    });
+
+}
+
+
+function abrirPerfilPorNombre(nombre){
+
+    const jugador =
+        jugadores.find(j =>
+            j.nombre.toLowerCase() === nombre.toLowerCase()
+        );
+
+    if(!jugador){
+
+        alert("No se encontró el jugador.");
+
+        return;
+    }
+
+    abrirPerfilPorIndice(jugadores.indexOf(jugador));
+
+}
+
+function abrirPerfilPorIndice(indice){
+
+    if(!jugadores[indice]) return;
+
+    jugadorPerfilActual = jugadores[indice];
+
+    cargarOpcionesPaisPerfil();
+
+    document.getElementById("editProfileName").value =
+        jugadorPerfilActual.nombre || "";
+
+    document.getElementById("editProfileCountry").value =
+        jugadorPerfilActual.pais || "Ecuador";
+
+    document.getElementById("editProfileNick").value =
+        jugadorPerfilActual.nick || "";
+
+    document.getElementById("editProfileAvatar").value =
+        jugadorPerfilActual.avatar || "🎱";
+
+    document.getElementById("editProfileBio").value =
+        jugadorPerfilActual.bio || "";
+
+    document.getElementById("profileMessage").style.display="none";
+
+    actualizarVistaPerfil();
+
+    document.getElementById("profileModal").classList.add("show");
+    document.getElementById("profileModal").classList.remove("profile-view-mode");
+
+}
+
+function cerrarPerfil(){
+
+    document.getElementById("profileModal").classList.remove("show");
+
+    jugadorPerfilActual = null;
+
+}
+
+function actualizarVistaPerfil(){
+
+    if(!jugadorPerfilActual) return;
+
+    const nombre =
+        document.getElementById("editProfileName").value.trim()
+        || "JUGADOR";
+
+    const pais =
+        document.getElementById("editProfileCountry").value
+        || jugadorPerfilActual.pais;
+
+    const paisInfo =
+        paisesDisponibles.find(p=>p[0]===pais);
+
+    const bandera =
+        paisInfo ? paisInfo[1] : (jugadorPerfilActual.bandera || "🌎");
+
+    const nick =
+        document.getElementById("editProfileNick").value.trim();
+
+    const avatar =
+        document.getElementById("editProfileAvatar").value.trim()
+        || "🎱";
+
+    const bio =
+        document.getElementById("editProfileBio").value.trim()
+        || "Sin descripción.";
+
+    document.getElementById("profilePreviewName").textContent =
+        nombre.toUpperCase();
+
+    document.getElementById("profilePreviewCountry").textContent =
+        bandera + " " + pais;
+
+    document.getElementById("profilePreviewNick").textContent =
+        nick ? nick : "@jugador";
+
+    document.getElementById("profilePreviewBio").textContent =
+        bio;
+
+    document.getElementById("profilePreviewElo").textContent =
+        jugadorPerfilActual.elo;
+
+    document.getElementById("profilePreviewWins").textContent =
+        jugadorPerfilActual.ganadas;
+
+    document.getElementById("profilePreviewLosses").textContent =
+        jugadorPerfilActual.perdidas;
+
+    document.getElementById("profilePreviewStreak").textContent =
+        jugadorPerfilActual.racha;
+
+    const avatarBox =
+        document.getElementById("profilePreviewAvatar");
+
+    if(jugadorPerfilActual.foto){
+
+        avatarBox.innerHTML =
+            `<img src="${jugadorPerfilActual.foto}" alt="Foto de perfil">`;
+
+    }else{
+
+        avatarBox.innerHTML = avatar;
+
+    }
+
+    const photoPreview =
+        document.getElementById("profilePhotoPreview");
+
+    if(photoPreview){
+
+        photoPreview.innerHTML =
+            jugadorPerfilActual.foto
+            ? `<img src="${jugadorPerfilActual.foto}" alt="Vista previa">`
+            : avatar;
+
+    }
+
+}
+
+function guardarPerfil(){
+
+    if(!jugadorPerfilActual) return;
+
+    const nombre =
+        document.getElementById("editProfileName").value.trim();
+
+    const pais =
+        document.getElementById("editProfileCountry").value;
+
+    const paisInfo =
+        paisesDisponibles.find(p=>p[0]===pais);
+
+    const nick =
+        document.getElementById("editProfileNick").value.trim();
+
+    const avatar =
+        document.getElementById("editProfileAvatar").value.trim()
+        || "🎱";
+
+    const bio =
+        document.getElementById("editProfileBio").value.trim();
+
+    if(!nombre){
+
+        alert("El nombre no puede estar vacío.");
+
+        return;
+    }
+
+    // Evitar nombres duplicados.
+    const duplicado = jugadores.some(j =>
+        j !== jugadorPerfilActual &&
+        j.nombre.toLowerCase() === nombre.toLowerCase()
+    );
+
+    if(duplicado){
+
+        alert("Ya existe otro jugador con ese nombre.");
+
+        return;
+    }
+
+    jugadorPerfilActual.nombre = nombre.toUpperCase();
+
+    jugadorPerfilActual.pais =
+        paisInfo ? paisInfo[0] : jugadorPerfilActual.pais;
+
+    jugadorPerfilActual.bandera =
+        paisInfo ? paisInfo[1] : jugadorPerfilActual.bandera;
+
+    jugadorPerfilActual.nick = nick;
+
+    jugadorPerfilActual.avatar = avatar;
+
+    jugadorPerfilActual.bio = bio;
+
+    guardarDatos();
+
+    jugadores.sort((a,b)=>b.elo-a.elo);
+
+    mostrarRanking(jugadores);
+
+    cargarListaJugadores();
+
+    actualizarDatosGenerales();
+
+    const message =
+        document.getElementById("profileMessage");
+
+    message.textContent =
+        "✅ Perfil actualizado correctamente.";
+
+    message.style.display="block";
+
+    actualizarVistaPerfil();
+
+}
+
+
+/* Actualización en vivo de la vista previa */
+
+[
+    "editProfileName",
+    "editProfileCountry",
+    "editProfileNick",
+    "editProfileAvatar",
+    "editProfileBio"
+].forEach(id=>{
+
+    const elemento = document.getElementById(id);
+
+    if(elemento){
+
+        elemento.addEventListener("input",actualizarVistaPerfil);
+        elemento.addEventListener("change",actualizarVistaPerfil);
+
+    }
+
+});
+
+/* =====================================
+   CONECTAR MENÚ JUGADORES
+===================================== */
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+    document
+        .querySelectorAll(".top-menu span")
+        .forEach(item=>{
+
+            if(item.textContent.trim()==="JUGADORES"){
+
+                item.addEventListener("click",abrirJugadores);
+
+            }
+
+        });
+
+    document
+        .querySelectorAll(".menu button")
+        .forEach(item=>{
+
+            const texto=item.textContent;
+
+            if(
+                texto.includes("TOP JUGADORES") ||
+                texto.includes("NUEVOS JUGADORES")
+            ){
+
+                item.addEventListener("click",abrirJugadores);
+
+            }
+
+        });
+
+    actualizarDatosGenerales();
+
+});
+
+
+/* =====================================
+   FOTO DE PERFIL
+===================================== */
+
+let nuevaFotoPerfil = null;
+let quitarFotoSolicitada = false;
+
+function prepararFotoPerfil(){
+
+    const input =
+        document.getElementById("editProfilePhoto");
+
+    if(!input) return;
+
+    input.addEventListener("change",function(){
+
+        const archivo = this.files && this.files[0];
+
+        if(!archivo){
+
+            nuevaFotoPerfil = null;
+
+            actualizarVistaPerfil();
+
+            return;
+        }
+
+        const tiposPermitidos = [
+            "image/jpeg",
+            "image/png",
+            "image/webp",
+            "image/gif"
+        ];
+
+        if(!tiposPermitidos.includes(archivo.type)){
+
+            alert("Formato no permitido. Usa JPG, PNG, WEBP o GIF.");
+
+            this.value="";
+
+            return;
+        }
+
+        // Límite razonable para localStorage.
+        // La imagen se convierte a Data URL para que quede guardada
+        // dentro de los datos del jugador.
+        if(archivo.size > 2 * 1024 * 1024){
+
+            alert("La foto es demasiado grande. Usa una imagen de máximo 2 MB.");
+
+            this.value="";
+
+            return;
+        }
+
+        const lector = new FileReader();
+
+        lector.onload = function(){
+
+            nuevaFotoPerfil = lector.result;
+            quitarFotoSolicitada = false;
+
+            actualizarVistaPerfil();
+
+        };
+
+        lector.readAsDataURL(archivo);
+
+    });
+
+}
+
+function quitarFotoPerfil(){
+
+    nuevaFotoPerfil = null;
+    quitarFotoSolicitada = true;
+
+    const input =
+        document.getElementById("editProfilePhoto");
+
+    if(input) input.value="";
+
+    actualizarVistaPerfil();
+
+}
+
+function abrirPerfilPorIndice(indice){
+
+    if(!jugadores[indice]) return;
+
+    jugadorPerfilActual = jugadores[indice];
+
+    nuevaFotoPerfil = null;
+    quitarFotoSolicitada = false;
+
+    cargarOpcionesPaisPerfil();
+
+    document.getElementById("editProfileName").value =
+        jugadorPerfilActual.nombre || "";
+
+    document.getElementById("editProfileCountry").value =
+        jugadorPerfilActual.pais || "Ecuador";
+
+    document.getElementById("editProfileNick").value =
+        jugadorPerfilActual.nick || "";
+
+    document.getElementById("editProfileAvatar").value =
+        jugadorPerfilActual.avatar || "🎱";
+
+    document.getElementById("editProfileBio").value =
+        jugadorPerfilActual.bio || "";
+
+    const input =
+        document.getElementById("editProfilePhoto");
+
+    if(input) input.value="";
+
+    document.getElementById("profileMessage").style.display="none";
+
+    actualizarVistaPerfil();
+
+    document.getElementById("profileModal").classList.add("show");
+
+}
+
+function guardarPerfil(){
+
+    if(!jugadorPerfilActual) return;
+
+    const nombre =
+        document.getElementById("editProfileName").value.trim();
+
+    const pais =
+        document.getElementById("editProfileCountry").value;
+
+    const paisInfo =
+        paisesDisponibles.find(p=>p[0]===pais);
+
+    const nick =
+        document.getElementById("editProfileNick").value.trim();
+
+    const avatar =
+        document.getElementById("editProfileAvatar").value.trim()
+        || "🎱";
+
+    const bio =
+        document.getElementById("editProfileBio").value.trim();
+
+    if(!nombre){
+
+        alert("El nombre no puede estar vacío.");
+
+        return;
+    }
+
+    const duplicado = jugadores.some(j =>
+        j !== jugadorPerfilActual &&
+        j.nombre.toLowerCase() === nombre.toLowerCase()
+    );
+
+    if(duplicado){
+
+        alert("Ya existe otro jugador con ese nombre.");
+
+        return;
+    }
+
+    jugadorPerfilActual.nombre = nombre.toUpperCase();
+
+    jugadorPerfilActual.pais =
+        paisInfo ? paisInfo[0] : jugadorPerfilActual.pais;
+
+    jugadorPerfilActual.bandera =
+        paisInfo ? paisInfo[1] : jugadorPerfilActual.bandera;
+
+    jugadorPerfilActual.nick = nick;
+
+    jugadorPerfilActual.avatar = avatar;
+
+    jugadorPerfilActual.bio = bio;
+
+    if(nuevaFotoPerfil){
+
+        jugadorPerfilActual.foto = nuevaFotoPerfil;
+
+    }else if(quitarFotoSolicitada){
+
+        jugadorPerfilActual.foto = "";
+
+    }
+
+    // Asegurar que el ELO máximo exista para perfiles existentes.
+    if(typeof jugadorPerfilActual.eloMaximo !== "number"){
+        jugadorPerfilActual.eloMaximo = jugadorPerfilActual.elo;
+    }
+
+    if(jugadorPerfilActual.elo > jugadorPerfilActual.eloMaximo){
+        jugadorPerfilActual.eloMaximo = jugadorPerfilActual.elo;
+    }
+
+    guardarDatos();
+
+    jugadores.sort((a,b)=>b.elo-a.elo);
+
+    mostrarRanking(jugadores);
+
+    cargarListaJugadores();
+
+    actualizarDatosGenerales();
+
+    const message =
+        document.getElementById("profileMessage");
+
+    message.textContent =
+        "✅ Perfil actualizado correctamente.";
+
+    message.style.display="block";
+
+    nuevaFotoPerfil = null;
+    quitarFotoSolicitada = false;
+
+    actualizarVistaPerfil();
+
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+    prepararFotoPerfil();
+
+});
+
+
+
+/* =====================================
+   BANDERAS VISIBLES
+===================================== */
+
+function actualizarBanderaPerfil(){
+
+    if(!jugadorPerfilActual) return;
+
+    const pais =
+        document.getElementById("editProfileCountry").value
+        || jugadorPerfilActual.pais
+        || "Ecuador";
+
+    const info =
+        paisesDisponibles.find(p=>p[0]===pais);
+
+    const bandera =
+        info ? info[1] : (jugadorPerfilActual.bandera || "🌎");
+
+    const countryBox =
+        document.getElementById("profilePreviewCountry");
+
+    if(countryBox){
+
+        countryBox.innerHTML =
+            `<span class="profile-country-flag">${bandera}</span>
+             <span>${pais}</span>`;
+
+    }
+
+}
+
+const actualizarVistaPerfilConBandera = actualizarVistaPerfil;
+
+actualizarVistaPerfil = function(){
+
+    actualizarVistaPerfilConBandera();
+
+    actualizarBanderaPerfil();
+
+};
+
+
+
+/* =====================================
+   BANDERAS COMO IMAGEN
+   Usa Twemoji para que se vean aunque
+   Windows/Chrome no tenga emoji de banderas.
+===================================== */
+
+function codigoBandera(pais){
+
+    const codigos = {
+        "Ecuador":"ec",
+        "México":"mx",
+        "Colombia":"co",
+        "Perú":"pe",
+        "Argentina":"ar",
+        "España":"es",
+        "Venezuela":"ve",
+        "Chile":"cl",
+        "Brasil":"br",
+        "Rep. Dominicana":"do",
+        "Estados Unidos":"us",
+        "Bolivia":"bo",
+        "Paraguay":"py",
+        "Uruguay":"uy",
+        "Costa Rica":"cr",
+        "Panamá":"pa",
+        "Guatemala":"gt",
+        "Honduras":"hn",
+        "El Salvador":"sv",
+        "Nicaragua":"ni",
+        "Cuba":"cu",
+        "Puerto Rico":"pr",
+        "Canadá":"ca",
+        "Francia":"fr",
+        "Italia":"it",
+        "Alemania":"de",
+        "Portugal":"pt",
+        "Reino Unido":"gb"
+    };
+
+    return codigos[pais] || "";
+}
+
+function banderaHTML(pais, clase="flag-img"){
+
+    const codigo = codigoBandera(pais);
+
+    if(!codigo) return "🌎";
+
+    return `
+        <img
+            class="${clase}"
+            src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f1e${codigo === "ec" ? "8e" : "6"}.svg"
+            alt="${pais}"
+            title="${pais}"
+            onerror="this.outerHTML='🌎';"
+        >
+    `;
+}
+
+/*
+ * Conversión correcta de código ISO a puntos Unicode de bandera
+ * para Twemoji: construye el archivo a partir de las letras.
+ */
+function banderaImagenHTML(pais, clase="flag-img"){
+
+    const codigo = codigoBandera(pais);
+
+    if(!codigo) return "🌎";
+
+    const a = codigo.charCodeAt(0) - 97 + 0x1f1e6;
+    const b = codigo.charCodeAt(1) - 97 + 0x1f1e6;
+
+    const archivo =
+        a.toString(16) + "-" +
+        b.toString(16) + ".svg";
+
+    return `
+        <img
+            class="${clase}"
+            src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/${archivo}"
+            alt="${pais}"
+            title="${pais}"
+            onerror="this.outerHTML='🌎';"
+        >
+    `;
+}
+
+/* Reemplaza la bandera textual del ranking por imagen. */
+const mostrarRankingConBandera = mostrarRanking;
+
+mostrarRanking = function(lista){
+
+    mostrarRankingConBandera(lista);
+
+    document.querySelectorAll("#rankingBody .country").forEach((elemento)=>{
+
+        const texto = elemento.textContent.trim();
+
+        const jugador = jugadores.find(j =>
+            texto.includes(j.pais) &&
+            texto.includes(j.nombre)
+        );
+
+        if(jugador){
+
+            elemento.innerHTML =
+                banderaImagenHTML(jugador.pais) +
+                `<span>${jugador.pais}</span>`;
+
+        }
+
+    });
+
+};
+
+/* Reemplaza la bandera textual del perfil por imagen. */
+const actualizarBanderaPerfilOriginal = actualizarBanderaPerfil;
+
+actualizarBanderaPerfil = function(){
+
+    if(!jugadorPerfilActual) return;
+
+    const pais =
+        document.getElementById("editProfileCountry").value
+        || jugadorPerfilActual.pais
+        || "Ecuador";
+
+    const countryBox =
+        document.getElementById("profilePreviewCountry");
+
+    if(countryBox){
+
+        countryBox.innerHTML =
+            `<span class="profile-country-flag">
+                ${banderaImagenHTML(pais)}
+             </span>
+             <span>${pais}</span>`;
+
+    }
+
+};
+
+
+mostrarRanking(jugadores);
+</script>
+
+
+<!-- =========================
+     MODAL REGISTRAR PARTIDA
+========================= -->
+
+<div class="modal-overlay" id="matchModal">
+    <div class="elo-modal">
+
+        <div class="modal-head">
+            <h3>🎱 <span>REGISTRAR PARTIDA</span></h3>
+            <button class="close-modal" onclick="cerrarPartida()">✕</button>
+        </div>
+
+        <div class="match-form">
+
+            <div class="match-grid">
+
+                <div class="match-card">
+                    <label>JUGADOR 1</label>
+                    <select id="player1" onchange="actualizarPreview()"></select>
+                    <div class="match-elo" id="elo1">1000 ELO</div>
+                </div>
+
+                <div class="vs">VS</div>
+
+                <div class="match-card">
+                    <label>JUGADOR 2</label>
+                    <select id="player2" onchange="actualizarPreview()"></select>
+                    <div class="match-elo" id="elo2">1000 ELO</div>
+                </div>
+
+            </div>
+
+            <div class="score-area">
+                <h4>¿QUIÉN GANÓ?</h4>
+
+                <div class="result-buttons">
+                    <button class="result-btn" id="win1" onclick="seleccionarGanador(1)">
+                        🏆 GANÓ JUGADOR 1
+                    </button>
+
+                    <button class="result-btn" id="win2" onclick="seleccionarGanador(2)">
+                        🏆 GANÓ JUGADOR 2
+                    </button>
+                </div>
+
+                <div class="score-inputs">
+                    <input id="score1" type="number" min="0" placeholder="Puntuación jugador 1">
+                    <input id="score2" type="number" min="0" placeholder="Puntuación jugador 2">
+                </div>
+
+                <div class="elo-preview">
+                    <div class="preview-box">
+                        <small id="previewName1">JUGADOR 1</small>
+                        <strong id="previewElo1">1000</strong>
+                        <span class="preview-change" id="previewChange1">0</span>
+                    </div>
+
+                    <div class="preview-box">
+                        <small id="previewName2">JUGADOR 2</small>
+                        <strong id="previewElo2">1000</strong>
+                        <span class="preview-change" id="previewChange2">0</span>
+                    </div>
+                </div>
+
+                <button class="register-match" onclick="registrarPartida()">
+                    🎱 REGISTRAR RESULTADO Y ACTUALIZAR ELO
+                </button>
+
+                <div class="match-success" id="matchSuccess"></div>
+
+                <div class="elo-help">
+                    Sistema ELO K=32. Una victoria contra un jugador con ELO superior
+                    otorga más puntos; contra un jugador inferior otorga menos.
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- =========================
+     MODAL JUGADORES
+========================= -->
+
+<div class="players-overlay" id="playersModal">
+
+    <div class="players-modal">
+
+        <div class="players-head">
+            <h3>👤 <span>GESTIÓN DE JUGADORES</span></h3>
+            <button class="players-close" onclick="cerrarJugadores()">✕</button>
+        </div>
+
+        <div class="player-form">
+
+            <div class="player-field">
+                <label>Nombre del jugador</label>
+                <input id="newPlayerName" type="text" placeholder="Ej. IKAR">
+            </div>
+
+            <div class="player-field">
+                <label>País</label>
+                <select id="newPlayerCountry">
+                    <option value="Ecuador" data-flag="🇪🇨">🇪🇨 Ecuador</option>
+                    <option value="México" data-flag="🇲🇽">🇲🇽 México</option>
+                    <option value="Colombia" data-flag="🇨🇴">🇨🇴 Colombia</option>
+                    <option value="Perú" data-flag="🇵🇪">🇵🇪 Perú</option>
+                    <option value="Argentina" data-flag="🇦🇷">🇦🇷 Argentina</option>
+                    <option value="España" data-flag="🇪🇸">🇪🇸 España</option>
+                    <option value="Venezuela" data-flag="🇻🇪">🇻🇪 Venezuela</option>
+                    <option value="Chile" data-flag="🇨🇱">🇨🇱 Chile</option>
+                    <option value="Brasil" data-flag="🇧🇷">🇧🇷 Brasil</option>
+                    <option value="Rep. Dominicana" data-flag="🇩🇴">🇩🇴 Rep. Dominicana</option>
+                    <option value="Estados Unidos" data-flag="🇺🇸">🇺🇸 Estados Unidos</option>
+                </select>
+            </div>
+
+            <div class="player-field">
+                <label>ELO inicial</label>
+                <input id="newPlayerElo" type="number" min="100" max="3000" value="1000">
+            </div>
+
+            <div class="player-field">
+                <label>Avatar / emoji</label>
+                <input id="newPlayerAvatar" type="text" maxlength="4" placeholder="🎱">
+            </div>
+
+            <div class="player-success" id="playerSuccess"></div>
+
+            <div class="player-actions">
+                <button class="cancel-player-btn" onclick="cerrarJugadores()">CANCELAR</button>
+                <button class="add-player-btn" onclick="agregarJugador()">
+                    ➕ AGREGAR JUGADOR
+                </button>
+            </div>
+
+        </div>
+
+        
+<div class="delete-warning">
+    ⚠️ Al borrar un jugador se eliminará de este ranking y de los datos guardados en este navegador.
+    Esta acción no se puede deshacer desde la página.
+</div>
+
+<div class="players-list">
+
+            <h4>JUGADORES REGISTRADOS</h4>
+
+            <div id="playersList"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     PERFIL PERSONALIZABLE
+========================= -->
+
+<div class="profile-overlay" id="profileModal">
+
+    <div class="profile-modal">
+
+        <div class="profile-head">
+            <h3>👤 <span>PERFIL DEL JUGADOR</span></h3>
+
+            <div style="display:flex;gap:8px;align-items:center;">
+
+                <button class="profile-edit-quick"
+                    onclick="activarEdicionPerfil()">
+                    ✏️ EDITAR PERFIL
+                </button>
+
+                <button class="profile-close" onclick="cerrarPerfil()">✕</button>
+
+            </div>
+        </div>
+
+        <div class="profile-body">
+
+            <div class="profile-preview">
+
+                <div class="profile-avatar-large" id="profilePreviewAvatar">
+                    🎱
+                </div>
+
+                <div class="profile-preview-info">
+
+                    <div class="profile-preview-name" id="profilePreviewName">
+                        JUGADOR
+                    </div>
+
+                    <div class="profile-preview-country" id="profilePreviewCountry">
+                        <span class="profile-country-flag">🌎</span>
+                        <span>País</span>
+                    </div>
+
+                    <div class="profile-preview-nick" id="profilePreviewNick">
+                        @jugador
+                    </div>
+
+                    <div class="profile-preview-bio" id="profilePreviewBio">
+                        Sin descripción.
+                    </div>
+
+                    <div class="profile-stats-preview">
+
+                        <div class="profile-mini-stat">
+                            <small>ELO</small>
+                            <strong id="profilePreviewElo">1000</strong>
+                        </div>
+
+                        <div class="profile-mini-stat">
+                            <small>VICTORIAS</small>
+                            <strong id="profilePreviewWins">0</strong>
+                        </div>
+
+                        <div class="profile-mini-stat">
+                            <small>DERROTAS</small>
+                            <strong id="profilePreviewLosses">0</strong>
+                        </div>
+
+                        <div class="profile-mini-stat">
+                            <small>RACHA</small>
+                            <strong id="profilePreviewStreak">0</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="profile-edit-grid">
+
+                <div class="profile-field">
+                    <label>Nombre</label>
+                    <input id="editProfileName" type="text" maxlength="30">
+                </div>
+
+                <div class="profile-field">
+                    <label>País</label>
+                    <select id="editProfileCountry"></select>
+                </div>
+
+                <div class="profile-field">
+                    <label>Nickname / usuario</label>
+                    <input id="editProfileNick" type="text" maxlength="30" placeholder="@jugador">
+                </div>
+
+                <div class="profile-field">
+                    <label>Foto de perfil</label>
+
+                    <div class="profile-photo-upload">
+
+                        <div class="profile-photo-preview" id="profilePhotoPreview">
+                            🎱
+                        </div>
+
+                        <div class="profile-photo-controls">
+
+                            <input
+                                id="editProfilePhoto"
+                                type="file"
+                                accept="image/png,image/jpeg,image/webp,image/gif"
+                            >
+
+                            <button
+                                type="button"
+                                class="remove-photo-btn"
+                                onclick="quitarFotoPerfil()">
+                                🗑 QUITAR FOTO
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <label style="margin-top:10px;">Avatar alternativo</label>
+
+                    <input
+                        id="editProfileAvatar"
+                        type="text"
+                        maxlength="4"
+                        placeholder="🎱">
+
+                    <div class="profile-avatar-help">
+                        Puedes subir JPG, PNG, WEBP o GIF. Si no hay foto, se mostrará el avatar.
+                    </div>
+                </div>
+
+                <div class="profile-field full">
+                    <label>Descripción</label>
+                    <textarea id="editProfileBio" maxlength="160"
+                        placeholder="Escribe una descripción del jugador..."></textarea>
+                </div>
+
+            </div>
+
+            <div class="profile-actions">
+
+                <button class="cancel-profile-btn" onclick="cerrarPerfil()">
+                    CANCELAR
+                </button>
+
+                <button class="save-profile-btn" onclick="guardarPerfil()">
+                    ✓ GUARDAR PERFIL
+                </button>
+
+            </div>
+
+            <div class="profile-message" id="profileMessage"></div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
