@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
 <title>Admin - Ranking 8BP</title>
 
@@ -13,224 +17,481 @@
 }
 
 body{
+
     margin:0;
-    font-family:Arial,Helvetica,sans-serif;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
     background:#05090a;
+
     color:white;
 }
 
 .container{
+
     max-width:1100px;
+
     margin:auto;
-    padding:20px;
+
+    padding:30px 20px;
 }
 
+
+/* =========================
+   HEADER
+========================= */
+
 header{
+
     display:flex;
+
     justify-content:space-between;
+
     align-items:center;
+
     background:#081012;
+
     border:1px solid #1b3034;
+
     border-radius:14px;
+
     padding:18px 22px;
-    margin-bottom:20px;
+
+    margin-bottom:25px;
 }
 
 .logo{
+
     font-size:24px;
+
     font-weight:bold;
 }
 
 .logo span{
+
     color:#9cff00;
 }
 
+.admin-email{
+
+    font-size:13px;
+
+    color:#aaa;
+
+    margin-top:5px;
+}
+
+
+/* =========================
+   BOTONES
+========================= */
+
 button{
+
     border:0;
+
     border-radius:8px;
+
     padding:12px 18px;
+
     cursor:pointer;
+
     font-weight:bold;
 }
 
+button:hover{
+
+    opacity:.9;
+}
+
 .btn-green{
+
     background:#9cff00;
+
     color:#000;
 }
 
 .btn-red{
+
     background:#ff3030;
+
     color:white;
 }
 
 .btn-gray{
-    background:#263437;
+
+    background:#263337;
+
     color:white;
 }
 
-.login-box,
-.admin-box,
-.editor-box{
-    background:#081012;
-    border:1px solid #1b3034;
-    border-radius:15px;
-    padding:25px;
-}
+
+/* =========================
+   LOGIN
+========================= */
 
 .login-box{
+
+    background:#081012;
+
+    border:1px solid #1b3034;
+
+    border-radius:15px;
+
+    padding:30px;
+
     max-width:420px;
+
     margin:80px auto;
 }
 
-h1,h2,h3{
+.login-box h1{
+
     margin-top:0;
 }
 
-input,
-select{
-    width:100%;
-    padding:13px;
-    margin:8px 0 15px;
-    border-radius:8px;
-    border:1px solid #294348;
-    background:#05090a;
-    color:white;
-}
 
-label{
-    display:block;
-    font-weight:bold;
-    margin-top:10px;
+/* =========================
+   ADMIN
+========================= */
+
+.admin-box{
+
+    background:#081012;
+
+    border:1px solid #1b3034;
+
+    border-radius:15px;
+
+    padding:25px;
+
+    margin-bottom:25px;
 }
 
 .hidden{
-    display:none;
+
+    display:none !important;
 }
 
-.player{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    border:1px solid #1b3034;
-    padding:15px;
-    border-radius:10px;
+
+/* =========================
+   INPUTS
+========================= */
+
+input,
+select{
+
+    width:100%;
+
+    padding:13px;
+
+    margin:8px 0 15px;
+
+    border-radius:8px;
+
+    border:1px solid #294348;
+
+    background:#05090a;
+
+    color:white;
+
+    font-size:15px;
+}
+
+label{
+
+    display:block;
+
+    font-weight:bold;
+
     margin-top:10px;
 }
 
-.player-info{
+
+/* =========================
+   JUGADOR
+========================= */
+
+.player{
+
     display:flex;
+
+    justify-content:space-between;
+
     align-items:center;
+
+    border:1px solid #1b3034;
+
+    padding:15px;
+
+    border-radius:10px;
+
+    margin-top:10px;
+
+    background:#061012;
+}
+
+.player-info{
+
+    display:flex;
+
+    align-items:center;
+
     gap:15px;
+
+    min-width:0;
 }
 
 .avatar{
+
     width:60px;
+
     height:60px;
+
     border-radius:50%;
+
     object-fit:cover;
+
     background:#222;
+
+    border:2px solid #294348;
+}
+
+.player-name{
+
+    font-size:17px;
+
+    font-weight:bold;
+}
+
+.player-country{
+
+    color:#ccc;
+
+    margin-top:4px;
+
+    font-size:14px;
+}
+
+.player-stats{
+
+    margin-top:5px;
+
+    font-size:13px;
+
+    color:#aaa;
+}
+
+.player-stats .elo{
+
+    color:#9cff00;
+
+    font-weight:bold;
 }
 
 .actions{
+
     display:flex;
+
     gap:8px;
+
+    flex-shrink:0;
 }
 
-.editor-box{
-    margin-top:20px;
+
+/* =========================
+   EDITOR
+========================= */
+
+.editor{
+
+    background:#081012;
+
+    border:1px solid #9cff00;
+
+    border-radius:15px;
+
+    padding:25px;
+
+    margin-bottom:25px;
+}
+
+.editor-title{
+
+    font-size:23px;
+
+    font-weight:bold;
+
+    margin-bottom:20px;
+}
+
+.editor-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,1fr);
+
+    gap:5px 20px;
+}
+
+.full{
+
+    grid-column:1 / -1;
+}
+
+.preview-box{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+    margin:10px 0 20px;
+
+    padding:15px;
+
+    border:1px solid #1b3034;
+
+    border-radius:10px;
+}
+
+.preview{
+
+    width:90px;
+
+    height:90px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    background:#222;
+
+    border:2px solid #9cff00;
 }
 
 .editor-buttons{
+
     display:flex;
+
     gap:10px;
-    margin-top:15px;
+
+    margin-top:20px;
+
+    flex-wrap:wrap;
 }
 
+
+/* =========================
+   MENSAJES
+========================= */
+
 .error{
+
     color:#ff5252;
+
     margin-top:10px;
 }
 
 .success{
+
     color:#9cff00;
+
     margin-top:10px;
 }
 
-.user-info{
+.info{
+
     color:#aaa;
-    font-size:13px;
-    margin-top:5px;
+
+    margin-top:10px;
 }
 
-.preview{
-    width:100px;
-    height:100px;
-    border-radius:50%;
-    object-fit:cover;
-    background:#222;
-    border:2px solid #9cff00;
-    display:block;
-    margin:10px 0 20px;
-}
 
-@media(max-width:600px){
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:700px){
+
+    .container{
+
+        padding:15px 10px;
+    }
 
     header{
+
         flex-direction:column;
+
         align-items:flex-start;
+
         gap:15px;
     }
 
-    header button{
-        width:100%;
-    }
-
     .player{
+
         flex-direction:column;
+
         align-items:flex-start;
+
         gap:15px;
     }
 
     .actions{
+
         width:100%;
     }
 
     .actions button{
+
         flex:1;
     }
 
-    .editor-buttons{
-        flex-direction:column;
+    .editor-grid{
+
+        grid-template-columns:1fr;
     }
 
-    .editor-buttons button{
-        width:100%;
+    .full{
+
+        grid-column:auto;
     }
 
 }
 
 </style>
+
 </head>
 
 
 <body>
 
+
 <div class="container">
 
 
-<!-- ================= LOGIN ================= -->
+<!-- =====================================================
+     LOGIN
+===================================================== -->
 
-<div id="loginSection" class="login-box">
+<div id="loginSection"
+     class="login-box">
 
-    <h1>
-        🔐 ADMIN <span style="color:#9cff00;">8BP</span>
-    </h1>
+    <h1>🔐 ADMIN 8BP</h1>
 
     <p>
         Panel de administración del Ranking 8BP
     </p>
 
-    <label>Correo</label>
+
+    <label>
+        Correo
+    </label>
 
     <input
         type="email"
@@ -238,7 +499,10 @@ label{
         placeholder="Correo del administrador"
     >
 
-    <label>Contraseña</label>
+
+    <label>
+        Contraseña
+    </label>
 
     <input
         type="password"
@@ -246,237 +510,406 @@ label{
         placeholder="Contraseña"
     >
 
+
     <button
         class="btn-green"
-        onclick="login()"
-    >
+        onclick="login()">
+
         ENTRAR
+
     </button>
-
-    <div id="loginError" class="error"></div>
-
-</div>
-
-
-<!-- ================= ADMIN ================= -->
-
-<div id="adminSection" class="hidden">
-
-
-<header>
-
-    <div>
-
-        <div class="logo">
-            RANKING <span>8BP</span> ADMIN
-        </div>
-
-        <div
-            id="adminEmail"
-            class="user-info">
-        </div>
-
-    </div>
-
-    <button
-        class="btn-red"
-        onclick="logout()"
-    >
-        CERRAR SESIÓN
-    </button>
-
-</header>
-
-
-<!-- ================= JUGADORES ================= -->
-
-<div class="admin-box">
-
-    <h2>👥 Jugadores</h2>
-
-    <button
-        class="btn-green"
-        onclick="nuevoJugador()"
-    >
-        + AGREGAR JUGADOR
-    </button>
-
-    <div id="playersList">
-        Cargando jugadores...
-    </div>
-
-</div>
-
-
-<!-- ================= EDITOR ================= -->
-
-<div
-    id="editor"
-    class="editor-box hidden"
->
-
-    <h2 id="editorTitle">
-        Editar jugador
-    </h2>
-
-
-    <input
-        type="hidden"
-        id="playerId"
-    >
-
-
-    <label>Nombre</label>
-
-    <input
-        type="text"
-        id="nombre"
-        placeholder="Nombre del jugador"
-    >
-
-
-    <label>País</label>
-
-    <input
-        type="text"
-        id="pais"
-        placeholder="Ejemplo: Ecuador"
-    >
-
-
-    <label>Código del país</label>
-
-    <input
-        type="text"
-        id="codigoPais"
-        placeholder="Ejemplo: EC"
-        maxlength="2"
-    >
-
-
-    <label>Foto / Avatar</label>
-
-    <input
-        type="text"
-        id="foto"
-        placeholder="URL de la foto"
-        oninput="actualizarPreview()"
-    >
-
-    <img
-        id="previewFoto"
-        class="preview"
-        src="https://via.placeholder.com/100"
-        alt="Vista previa"
-    >
-
-
-    <label>ELO</label>
-
-    <input
-        type="number"
-        id="elo"
-        value="1000"
-    >
-
-
-    <label>Victorias</label>
-
-    <input
-        type="number"
-        id="victorias"
-        value="0"
-    >
-
-
-    <label>Derrotas</label>
-
-    <input
-        type="number"
-        id="derrotas"
-        value="0"
-    >
-
-
-    <label>Racha</label>
-
-    <input
-        type="number"
-        id="racha"
-        value="0"
-    >
-
-
-    <label>Último resultado</label>
-
-    <select id="ultimoResultado">
-
-        <option value="">
-            Sin partido
-        </option>
-
-        <option value="VICTORIA">
-            VICTORIA
-        </option>
-
-        <option value="DERROTA">
-            DERROTA
-        </option>
-
-    </select>
-
-
-    <label>Último rival</label>
-
-    <input
-        type="text"
-        id="ultimoRival"
-        placeholder="Nombre del rival"
-    >
-
-
-    <div class="editor-buttons">
-
-        <button
-            class="btn-green"
-            onclick="guardarJugador()"
-        >
-            💾 GUARDAR
-        </button>
-
-        <button
-            class="btn-gray"
-            onclick="cancelarEdicion()"
-        >
-            CANCELAR
-        </button>
-
-        <button
-            class="btn-red"
-            onclick="eliminarJugador()"
-        >
-            🗑️ ELIMINAR
-        </button>
-
-    </div>
 
 
     <div
-        id="editorMessage"
-        class="success">
+        id="loginError"
+        class="error">
     </div>
 
 </div>
 
 
-</div>
+
+<!-- =====================================================
+     ADMIN
+===================================================== -->
+
+<div id="adminSection"
+     class="hidden">
+
+
+    <!-- HEADER -->
+
+    <header>
+
+        <div>
+
+            <div class="logo">
+
+                RANKING
+                <span>8BP</span>
+                ADMIN
+
+            </div>
+
+            <div
+                id="adminEmail"
+                class="admin-email">
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="btn-red"
+            onclick="logout()">
+
+            CERRAR SESIÓN
+
+        </button>
+
+    </header>
+
+
+
+    <!-- =================================================
+         EDITOR
+    ================================================== -->
+
+    <div
+        id="editor"
+        class="editor hidden">
+
+
+        <div
+            id="editorTitle"
+            class="editor-title">
+
+            ✏️ Editar jugador
+
+        </div>
+
+
+        <!-- ID OCULTO -->
+
+        <input
+            type="hidden"
+            id="playerId"
+        >
+
+
+        <!-- PREVIEW -->
+
+        <div class="preview-box">
+
+            <img
+                id="preview"
+                class="preview"
+                src=""
+                alt="Avatar"
+            >
+
+            <div>
+
+                <strong>
+                    Vista previa
+                </strong>
+
+                <p
+                    style="color:#aaa;margin:5px 0 0">
+
+                    Esta será la imagen del jugador.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- FORMULARIO -->
+
+        <div class="editor-grid">
+
+
+            <!-- NOMBRE -->
+
+            <div>
+
+                <label>
+                    Nombre del jugador
+                </label>
+
+                <input
+                    type="text"
+                    id="nombre"
+                    placeholder="Ej: EMANUEL"
+                >
+
+            </div>
+
+
+            <!-- PAÍS -->
+
+            <div>
+
+                <label>
+                    País
+                </label>
+
+                <input
+                    type="text"
+                    id="pais"
+                    placeholder="Ej: Ecuador"
+                >
+
+            </div>
+
+
+            <!-- CÓDIGO PAÍS -->
+
+            <div>
+
+                <label>
+                    Código del país
+                </label>
+
+                <input
+                    type="text"
+                    id="codigoPais"
+                    placeholder="Ej: EC"
+                    maxlength="5"
+                >
+
+            </div>
+
+
+            <!-- FOTO -->
+
+            <div class="full">
+
+                <label>
+                    URL de la foto
+                </label>
+
+                <input
+                    type="text"
+                    id="foto"
+                    placeholder="https://..."
+                    oninput="actualizarPreview()"
+                >
+
+            </div>
+
+
+            <!-- ELO -->
+
+            <div>
+
+                <label>
+                    ELO
+                </label>
+
+                <input
+                    type="number"
+                    id="elo"
+                    value="1000"
+                >
+
+            </div>
+
+
+            <!-- VICTORIAS -->
+
+            <div>
+
+                <label>
+                    Victorias
+                </label>
+
+                <input
+                    type="number"
+                    id="victorias"
+                    value="0"
+                >
+
+            </div>
+
+
+            <!-- DERROTAS -->
+
+            <div>
+
+                <label>
+                    Derrotas
+                </label>
+
+                <input
+                    type="number"
+                    id="derrotas"
+                    value="0"
+                >
+
+            </div>
+
+
+            <!-- RACHA -->
+
+            <div>
+
+                <label>
+                    Racha
+                </label>
+
+                <input
+                    type="number"
+                    id="racha"
+                    value="0"
+                >
+
+            </div>
+
+
+            <!-- ÚLTIMO RESULTADO -->
+
+            <div>
+
+                <label>
+                    Último resultado
+                </label>
+
+                <select id="ultimoResultado">
+
+                    <option value="">
+                        Ninguno
+                    </option>
+
+                    <option value="VICTORIA">
+                        VICTORIA
+                    </option>
+
+                    <option value="DERROTA">
+                        DERROTA
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- ÚLTIMO RIVAL -->
+
+            <div>
+
+                <label>
+                    Último rival
+                </label>
+
+                <input
+                    type="text"
+                    id="ultimoRival"
+                    placeholder="Ej: DELVIN"
+                >
+
+            </div>
+
+
+        </div>
+
+
+        <!-- BOTONES -->
+
+        <div class="editor-buttons">
+
+            <button
+                class="btn-green"
+                onclick="guardarJugador()">
+
+                💾 GUARDAR CAMBIOS
+
+            </button>
+
+
+            <button
+                class="btn-gray"
+                onclick="cancelarEdicion()">
+
+                CANCELAR
+
+            </button>
+
+
+            <button
+                class="btn-red"
+                onclick="eliminarJugador()">
+
+                🗑️ ELIMINAR
+
+            </button>
+
+        </div>
+
+
+        <div
+            id="editorMessage">
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =================================================
+         JUGADORES
+    ================================================== -->
+
+    <div class="admin-box">
+
+
+        <h2>
+            👥 Jugadores
+        </h2>
+
+
+        <button
+            class="btn-green"
+            onclick="nuevoJugador()">
+
+            + AGREGAR JUGADOR
+
+        </button>
+
+
+        <div
+            id="playersList"
+            style="margin-top:20px">
+
+            Cargando jugadores...
+
+        </div>
+
+
+    </div>
+
 
 </div>
 
 
-<!-- ================= FIREBASE ================= -->
+</div>
+
+
+
+<!-- =====================================================
+     FIREBASE
+===================================================== -->
 
 <script type="module">
+
+
+/* =====================================================
+   IMPORTAR FIREBASE
+===================================================== */
 
 import {
     initializeApp
@@ -486,25 +919,45 @@ from
 
 
 import {
+
     getAuth,
+
     signInWithEmailAndPassword,
+
     onAuthStateChanged,
+
     signOut
+
 }
 from
 "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
 
 import {
+
     getDatabase,
+
     ref,
+
     onValue,
+
+    get,
+
     set,
+
+    push,
+
     remove
+
 }
 from
 "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 
+
+
+/* =====================================================
+   CONFIGURACIÓN FIREBASE
+===================================================== */
 
 const firebaseConfig = {
 
@@ -535,6 +988,11 @@ const firebaseConfig = {
 };
 
 
+
+/* =====================================================
+   INICIALIZAR
+===================================================== */
+
 const app =
     initializeApp(firebaseConfig);
 
@@ -548,9 +1006,9 @@ const database =
 
 
 
-/* ==========================================
+/* =====================================================
    LOGIN
-========================================== */
+===================================================== */
 
 window.login = async function(){
 
@@ -578,27 +1036,32 @@ window.login = async function(){
     if(!email || !password){
 
         error.textContent =
-        "Escribe tu correo y contraseña.";
+            "Escribe tu correo y contraseña.";
 
         return;
-
     }
 
 
     try{
 
         await signInWithEmailAndPassword(
+
             auth,
+
             email,
+
             password
+
         );
 
-    }catch(e){
+    }
+
+    catch(e){
 
         console.error(e);
 
         error.textContent =
-        "Correo o contraseña incorrectos.";
+            "Correo o contraseña incorrectos.";
 
     }
 
@@ -606,9 +1069,9 @@ window.login = async function(){
 
 
 
-/* ==========================================
+/* =====================================================
    LOGOUT
-========================================== */
+===================================================== */
 
 window.logout = async function(){
 
@@ -618,66 +1081,83 @@ window.logout = async function(){
 
 
 
-/* ==========================================
+/* =====================================================
    ESTADO DE AUTENTICACIÓN
-========================================== */
+===================================================== */
 
-onAuthStateChanged(auth,(user)=>{
-
-    if(user){
-
-        document
-        .getElementById("loginSection")
-        .classList
-        .add("hidden");
+onAuthStateChanged(
+    auth,
+    (user)=>{
 
 
-        document
-        .getElementById("adminSection")
-        .classList
-        .remove("hidden");
+        if(user){
 
 
-        document
-        .getElementById("adminEmail")
-        .textContent =
-        "Administrador: " + user.email;
+            document
+            .getElementById("loginSection")
+            .classList
+            .add("hidden");
 
 
-        cargarJugadores();
-
-    }else{
-
-        document
-        .getElementById("loginSection")
-        .classList
-        .remove("hidden");
+            document
+            .getElementById("adminSection")
+            .classList
+            .remove("hidden");
 
 
-        document
-        .getElementById("adminSection")
-        .classList
-        .add("hidden");
+            document
+            .getElementById("adminEmail")
+            .textContent =
+            "Administrador: " +
+            user.email;
+
+
+            cargarJugadores();
+
+
+        }
+
+        else{
+
+
+            document
+            .getElementById("loginSection")
+            .classList
+            .remove("hidden");
+
+
+            document
+            .getElementById("adminSection")
+            .classList
+            .add("hidden");
+
+        }
 
     }
-
-});
-
+);
 
 
-/* ==========================================
+
+/* =====================================================
    CARGAR JUGADORES
-========================================== */
+===================================================== */
 
 function cargarJugadores(){
 
+
     const jugadoresRef =
-        ref(database,"jugadores");
+        ref(
+            database,
+            "jugadores"
+        );
 
 
     onValue(
+
         jugadoresRef,
+
         (snapshot)=>{
+
 
             const data =
                 snapshot.val();
@@ -685,7 +1165,9 @@ function cargarJugadores(){
 
             const container =
                 document
-                .getElementById("playersList");
+                .getElementById(
+                    "playersList"
+                );
 
 
             container.innerHTML = "";
@@ -694,19 +1176,25 @@ function cargarJugadores(){
             if(!data){
 
                 container.innerHTML =
-                "<p>No hay jugadores registrados todavía.</p>";
+
+                    "<p class='info'>" +
+                    "No hay jugadores registrados todavía." +
+                    "</p>";
 
                 return;
 
             }
 
 
-            Object.entries(data).forEach(
+            Object
+            .entries(data)
+            .forEach(
                 ([id,jugador])=>{
 
 
                     const div =
-                        document.createElement("div");
+                        document
+                        .createElement("div");
 
 
                     div.className =
@@ -715,7 +1203,37 @@ function cargarJugadores(){
 
                     const foto =
                         jugador.foto ||
-                        "https://via.placeholder.com/100";
+                        "";
+
+
+                    const nombre =
+                        jugador.nombre ||
+                        "SIN NOMBRE";
+
+
+                    const pais =
+                        jugador.pais ||
+                        "Sin país";
+
+
+                    const elo =
+                        jugador.elo ??
+                        1000;
+
+
+                    const victorias =
+                        jugador.victorias ??
+                        0;
+
+
+                    const derrotas =
+                        jugador.derrotas ??
+                        0;
+
+
+                    const racha =
+                        jugador.racha ??
+                        0;
 
 
                     div.innerHTML = `
@@ -725,32 +1243,48 @@ function cargarJugadores(){
                             <img
                                 class="avatar"
                                 src="${foto}"
-                                onerror="this.src='https://via.placeholder.com/100'"
+                                onerror="this.style.display='none'"
+                                alt=""
                             >
 
                             <div>
 
-                                <strong>
-                                    ${jugador.nombre || "Sin nombre"}
-                                </strong>
+                                <div
+                                    class="player-name">
 
-                                <br>
+                                    ${nombre}
 
-                                <small>
+                                </div>
 
-                                    ${jugador.codigoPais || ""}
-                                    ${jugador.pais || ""}
 
-                                    · ELO:
-                                    ${jugador.elo || 1000}
+                                <div
+                                    class="player-country">
 
-                                    <br>
+                                    ${pais}
 
-                                    🟢 ${jugador.victorias || 0}
-                                    /
-                                    🔴 ${jugador.derrotas || 0}
+                                </div>
 
-                                </small>
+
+                                <div
+                                    class="player-stats">
+
+                                    <span class="elo">
+                                        ELO: ${elo}
+                                    </span>
+
+                                    &nbsp; | &nbsp;
+
+                                    ✅ ${victorias}
+
+                                    &nbsp; | &nbsp;
+
+                                    ❌ ${derrotas}
+
+                                    &nbsp; | &nbsp;
+
+                                    🔥 ${racha}
+
+                                </div>
 
                             </div>
 
@@ -761,9 +1295,10 @@ function cargarJugadores(){
 
                             <button
                                 class="btn-green"
-                                onclick="editarJugador('${id}')"
-                            >
+                                onclick="editarJugador('${id}')">
+
                                 ✏️ EDITAR
+
                             </button>
 
                         </div>
@@ -771,23 +1306,35 @@ function cargarJugadores(){
                     `;
 
 
-                    container.appendChild(div);
+                    container
+                    .appendChild(div);
 
                 }
             );
 
         }
+
     );
 
 }
 
 
 
-/* ==========================================
-   NUEVO JUGADOR
-========================================== */
+/* =====================================================
+   EDITAR JUGADOR
+===================================================== */
 
-window.nuevoJugador = function(){
+window.editarJugador =
+async function(id){
+
+
+    console.log(
+        "Editando jugador:",
+        id
+    );
+
+
+    /* MOSTRAR EDITOR */
 
     document
     .getElementById("editor")
@@ -798,62 +1345,7 @@ window.nuevoJugador = function(){
     document
     .getElementById("editorTitle")
     .textContent =
-    "➕ Nuevo jugador";
-
-
-    document
-    .getElementById("playerId")
-    .value = "";
-
-
-    document
-    .getElementById("nombre")
-    .value = "";
-
-
-    document
-    .getElementById("pais")
-    .value = "";
-
-
-    document
-    .getElementById("codigoPais")
-    .value = "";
-
-
-    document
-    .getElementById("foto")
-    .value = "";
-
-
-    document
-    .getElementById("elo")
-    .value = 1000;
-
-
-    document
-    .getElementById("victorias")
-    .value = 0;
-
-
-    document
-    .getElementById("derrotas")
-    .value = 0;
-
-
-    document
-    .getElementById("racha")
-    .value = 0;
-
-
-    document
-    .getElementById("ultimoResultado")
-    .value = "";
-
-
-    document
-    .getElementById("ultimoRival")
-    .value = "";
+    "⏳ Cargando jugador...";
 
 
     document
@@ -861,137 +1353,191 @@ window.nuevoJugador = function(){
     .textContent = "";
 
 
-    actualizarPreview();
+    /* IR ARRIBA */
 
-};
-
-
-
-/* ==========================================
-   EDITAR JUGADOR
-========================================== */
-
-window.editarJugador = function(id){
-
-    const jugadorRef =
-        ref(database,"jugadores/" + id);
+    document
+    .getElementById("editor")
+    .scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
 
 
-    onValue(
-        jugadorRef,
-        (snapshot)=>{
-
-            const jugador =
-                snapshot.val();
+    try{
 
 
-            if(!jugador){
-
-                alert(
-                    "No se encontró el jugador."
-                );
-
-                return;
-
-            }
+        const jugadorRef =
+            ref(
+                database,
+                "jugadores/" + id
+            );
 
 
-            document
-            .getElementById("editor")
-            .classList
-            .remove("hidden");
+        const snapshot =
+            await get(jugadorRef);
 
 
-            document
-            .getElementById("editorTitle")
-            .textContent =
-            "✏️ Editar jugador";
+        if(!snapshot.exists()){
 
 
-            document
-            .getElementById("playerId")
-            .value = id;
+            alert(
+                "No se encontró este jugador en Firebase."
+            );
 
 
-            document
-            .getElementById("nombre")
-            .value =
-            jugador.nombre || "";
+            cancelarEdicion();
 
+            return;
 
-            document
-            .getElementById("pais")
-            .value =
-            jugador.pais || "";
-
-
-            document
-            .getElementById("codigoPais")
-            .value =
-            jugador.codigoPais || "";
-
-
-            document
-            .getElementById("foto")
-            .value =
-            jugador.foto || "";
-
-
-            document
-            .getElementById("elo")
-            .value =
-            jugador.elo ?? 1000;
-
-
-            document
-            .getElementById("victorias")
-            .value =
-            jugador.victorias ?? 0;
-
-
-            document
-            .getElementById("derrotas")
-            .value =
-            jugador.derrotas ?? 0;
-
-
-            document
-            .getElementById("racha")
-            .value =
-            jugador.racha ?? 0;
-
-
-            document
-            .getElementById("ultimoResultado")
-            .value =
-            jugador.ultimoResultado || "";
-
-
-            document
-            .getElementById("ultimoRival")
-            .value =
-            jugador.ultimoRival || "";
-
-
-            actualizarPreview();
-
-        },
-        {
-            onlyOnce:true
         }
-    );
+
+
+        const jugador =
+            snapshot.val();
+
+
+        console.log(
+            "Jugador encontrado:",
+            jugador
+        );
+
+
+        /* ID */
+
+        document
+        .getElementById("playerId")
+        .value =
+        id;
+
+
+        /* NOMBRE */
+
+        document
+        .getElementById("nombre")
+        .value =
+        jugador.nombre || "";
+
+
+        /* PAÍS */
+
+        document
+        .getElementById("pais")
+        .value =
+        jugador.pais || "";
+
+
+        /* CÓDIGO PAÍS */
+
+        document
+        .getElementById("codigoPais")
+        .value =
+        jugador.codigoPais || "";
+
+
+        /* FOTO */
+
+        document
+        .getElementById("foto")
+        .value =
+        jugador.foto || "";
+
+
+        /* ELO */
+
+        document
+        .getElementById("elo")
+        .value =
+        jugador.elo ?? 1000;
+
+
+        /* VICTORIAS */
+
+        document
+        .getElementById("victorias")
+        .value =
+        jugador.victorias ?? 0;
+
+
+        /* DERROTAS */
+
+        document
+        .getElementById("derrotas")
+        .value =
+        jugador.derrotas ?? 0;
+
+
+        /* RACHA */
+
+        document
+        .getElementById("racha")
+        .value =
+        jugador.racha ?? 0;
+
+
+        /* ÚLTIMO RESULTADO */
+
+        document
+        .getElementById("ultimoResultado")
+        .value =
+        jugador.ultimoResultado || "";
+
+
+        /* ÚLTIMO RIVAL */
+
+        document
+        .getElementById("ultimoRival")
+        .value =
+        jugador.ultimoRival || "";
+
+
+        /* TÍTULO */
+
+        document
+        .getElementById("editorTitle")
+        .textContent =
+        "✏️ Editar jugador";
+
+
+        /* PREVIEW */
+
+        actualizarPreview();
+
+
+    }
+
+    catch(error){
+
+
+        console.error(
+            "ERROR:",
+            error
+        );
+
+
+        document
+        .getElementById("editorMessage")
+        .innerHTML =
+
+            "<div class='error'>" +
+            "Error: " +
+            error.message +
+            "</div>";
+
+    }
 
 };
 
 
 
-/* ==========================================
-   VISTA PREVIA FOTO
-========================================== */
+/* =====================================================
+   PREVIEW FOTO
+===================================================== */
 
-window.actualizarPreview = function(){
+window.actualizarPreview =
+function(){
 
-    const url =
+
+    const foto =
         document
         .getElementById("foto")
         .value
@@ -1000,17 +1546,25 @@ window.actualizarPreview = function(){
 
     const preview =
         document
-        .getElementById("previewFoto");
+        .getElementById("preview");
 
 
-    if(url){
-
-        preview.src = url;
-
-    }else{
+    if(foto){
 
         preview.src =
-        "https://via.placeholder.com/100";
+            foto;
+
+        preview.style.display =
+            "block";
+
+    }
+
+    else{
+
+        preview.src = "";
+
+        preview.style.display =
+            "none";
 
     }
 
@@ -1018,22 +1572,101 @@ window.actualizarPreview = function(){
 
 
 
-/* ==========================================
+/* =====================================================
    GUARDAR JUGADOR
-========================================== */
+===================================================== */
 
-window.guardarJugador = async function(){
+window.guardarJugador =
+async function(){
+
 
     const id =
         document
         .getElementById("playerId")
-        .value
-        .trim();
+        .value;
+
+
+    if(!id){
+
+        alert(
+            "No hay ningún jugador seleccionado."
+        );
+
+        return;
+
+    }
 
 
     const nombre =
         document
         .getElementById("nombre")
+        .value
+        .trim();
+
+
+    const pais =
+        document
+        .getElementById("pais")
+        .value
+        .trim();
+
+
+    const codigoPais =
+        document
+        .getElementById("codigoPais")
+        .value
+        .trim()
+        .toUpperCase();
+
+
+    const foto =
+        document
+        .getElementById("foto")
+        .value
+        .trim();
+
+
+    const elo =
+        Number(
+            document
+            .getElementById("elo")
+            .value
+        );
+
+
+    const victorias =
+        Number(
+            document
+            .getElementById("victorias")
+            .value
+        );
+
+
+    const derrotas =
+        Number(
+            document
+            .getElementById("derrotas")
+            .value
+        );
+
+
+    const racha =
+        Number(
+            document
+            .getElementById("racha")
+            .value
+        );
+
+
+    const ultimoResultado =
+        document
+        .getElementById("ultimoResultado")
+        .value;
+
+
+    const ultimoRival =
+        document
+        .getElementById("ultimoRival")
         .value
         .trim();
 
@@ -1049,130 +1682,189 @@ window.guardarJugador = async function(){
     }
 
 
-    const jugadorId =
-        id ||
-        "jugador_" +
-        Date.now();
-
-
     const jugador = {
 
-        nombre:
 
-            document
-            .getElementById("nombre")
-            .value
-            .trim(),
+        nombre:
+            nombre,
 
 
         pais:
-
-            document
-            .getElementById("pais")
-            .value
-            .trim(),
+            pais,
 
 
         codigoPais:
-
-            document
-            .getElementById("codigoPais")
-            .value
-            .trim()
-            .toUpperCase(),
+            codigoPais,
 
 
         foto:
-
-            document
-            .getElementById("foto")
-            .value
-            .trim(),
+            foto,
 
 
         elo:
-
-            Number(
-                document
-                .getElementById("elo")
-                .value
-            ) || 1000,
+            isNaN(elo)
+            ? 1000
+            : elo,
 
 
         victorias:
-
-            Number(
-                document
-                .getElementById("victorias")
-                .value
-            ) || 0,
+            isNaN(victorias)
+            ? 0
+            : victorias,
 
 
         derrotas:
-
-            Number(
-                document
-                .getElementById("derrotas")
-                .value
-            ) || 0,
+            isNaN(derrotas)
+            ? 0
+            : derrotas,
 
 
         racha:
-
-            Number(
-                document
-                .getElementById("racha")
-                .value
-            ) || 0,
+            isNaN(racha)
+            ? 0
+            : racha,
 
 
         ultimoResultado:
-
-            document
-            .getElementById("ultimoResultado")
-            .value,
+            ultimoResultado,
 
 
         ultimoRival:
-
-            document
-            .getElementById("ultimoRival")
-            .value
-            .trim()
+            ultimoRival
 
     };
 
 
     try{
 
+
         await set(
+
             ref(
                 database,
-                "jugadores/" + jugadorId
+                "jugadores/" + id
             ),
+
             jugador
+
         );
 
 
         document
         .getElementById("editorMessage")
+        .innerHTML =
+
+            "<div class='success'>" +
+            "✅ Jugador guardado correctamente." +
+            "</div>";
+
+
+        document
+        .getElementById("editorTitle")
         .textContent =
-        "✅ Jugador guardado correctamente.";
+        "✏️ Editar jugador";
 
 
-        setTimeout(()=>{
+    }
 
-            cancelarEdicion();
-
-        },1000);
+    catch(error){
 
 
-    }catch(error){
+        console.error(error);
+
+
+        document
+        .getElementById("editorMessage")
+        .innerHTML =
+
+            "<div class='error'>" +
+            "❌ Error al guardar: " +
+            error.message +
+            "</div>";
+
+    }
+
+};
+
+
+
+/* =====================================================
+   NUEVO JUGADOR
+===================================================== */
+
+window.nuevoJugador =
+async function(){
+
+
+    try{
+
+
+        const jugadoresRef =
+            ref(
+                database,
+                "jugadores"
+            );
+
+
+        const nuevoRef =
+            push(jugadoresRef);
+
+
+        const nuevoJugador = {
+
+            nombre:
+                "NUEVO JUGADOR",
+
+            pais:
+                "",
+
+            codigoPais:
+                "",
+
+            foto:
+                "",
+
+            elo:
+                1000,
+
+            victorias:
+                0,
+
+            derrotas:
+                0,
+
+            racha:
+                0,
+
+            ultimoResultado:
+                "",
+
+            ultimoRival:
+                ""
+
+        };
+
+
+        await set(
+            nuevoRef,
+            nuevoJugador
+        );
+
+
+        editarJugador(
+            nuevoRef.key
+        );
+
+
+    }
+
+    catch(error){
 
         console.error(error);
 
         alert(
-            "No se pudo guardar el jugador."
+            "No se pudo crear el jugador: " +
+            error.message
         );
 
     }
@@ -1181,42 +1873,45 @@ window.guardarJugador = async function(){
 
 
 
-/* ==========================================
-   CANCELAR
-========================================== */
+/* =====================================================
+   CANCELAR EDICIÓN
+===================================================== */
 
-window.cancelarEdicion = function(){
+window.cancelarEdicion =
+function(){
+
 
     document
     .getElementById("editor")
     .classList
     .add("hidden");
 
+
+    document
+    .getElementById("playerId")
+    .value = "";
+
+
+    document
+    .getElementById("editorMessage")
+    .textContent = "";
+
 };
 
 
 
-/* ==========================================
-   ELIMINAR
-========================================== */
+/* =====================================================
+   ELIMINAR JUGADOR
+===================================================== */
 
-window.eliminarJugador = async function(){
+window.eliminarJugador =
+async function(){
+
 
     const id =
         document
         .getElementById("playerId")
         .value;
-
-
-    if(!id){
-
-        alert(
-            "Este jugador todavía no ha sido guardado."
-        );
-
-        return;
-
-    }
 
 
     const nombre =
@@ -1225,11 +1920,25 @@ window.eliminarJugador = async function(){
         .value;
 
 
+    if(!id){
+
+        alert(
+            "No hay ningún jugador seleccionado."
+        );
+
+        return;
+
+    }
+
+
     const confirmar =
         confirm(
+
             "¿Seguro que quieres eliminar a " +
             nombre +
-            "?"
+            "?\n\n" +
+            "Esta acción no se puede deshacer."
+
         );
 
 
@@ -1242,30 +1951,47 @@ window.eliminarJugador = async function(){
 
     try{
 
+
         await remove(
+
             ref(
                 database,
                 "jugadores/" + id
             )
+
         );
 
 
         cancelarEdicion();
 
 
-    }catch(error){
+        alert(
+            "Jugador eliminado correctamente."
+        );
+
+
+    }
+
+    catch(error){
+
 
         console.error(error);
 
+
         alert(
-            "No se pudo eliminar el jugador."
+
+            "No se pudo eliminar el jugador: " +
+            error.message
+
         );
 
     }
 
 };
 
+
 </script>
 
 </body>
+
 </html>
