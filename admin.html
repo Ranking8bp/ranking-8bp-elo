@@ -7,6 +7,7 @@
 <title>Admin - Ranking 8BP</title>
 
 <style>
+
 *{
     box-sizing:border-box;
 }
@@ -161,6 +162,17 @@ label{
     margin-top:5px;
 }
 
+.preview{
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    object-fit:cover;
+    background:#222;
+    border:2px solid #9cff00;
+    display:block;
+    margin:10px 0 20px;
+}
+
 @media(max-width:600px){
 
     header{
@@ -194,19 +206,25 @@ label{
     .editor-buttons button{
         width:100%;
     }
+
 }
+
 </style>
 </head>
+
 
 <body>
 
 <div class="container">
 
+
 <!-- ================= LOGIN ================= -->
 
 <div id="loginSection" class="login-box">
 
-    <h1>🔐 ADMIN <span style="color:#9cff00;">8BP</span></h1>
+    <h1>
+        🔐 ADMIN <span style="color:#9cff00;">8BP</span>
+    </h1>
 
     <p>
         Panel de administración del Ranking 8BP
@@ -244,6 +262,7 @@ label{
 
 <div id="adminSection" class="hidden">
 
+
 <header>
 
     <div>
@@ -261,7 +280,8 @@ label{
 
     <button
         class="btn-red"
-        onclick="logout()">
+        onclick="logout()"
+    >
         CERRAR SESIÓN
     </button>
 
@@ -276,7 +296,8 @@ label{
 
     <button
         class="btn-green"
-        onclick="nuevoJugador()">
+        onclick="nuevoJugador()"
+    >
         + AGREGAR JUGADOR
     </button>
 
@@ -291,16 +312,19 @@ label{
 
 <div
     id="editor"
-    class="editor-box hidden">
+    class="editor-box hidden"
+>
 
     <h2 id="editorTitle">
         Editar jugador
     </h2>
 
+
     <input
         type="hidden"
         id="playerId"
     >
+
 
     <label>Nombre</label>
 
@@ -310,6 +334,7 @@ label{
         placeholder="Nombre del jugador"
     >
 
+
     <label>País</label>
 
     <input
@@ -317,6 +342,7 @@ label{
         id="pais"
         placeholder="Ejemplo: Ecuador"
     >
+
 
     <label>Código del país</label>
 
@@ -327,13 +353,23 @@ label{
         maxlength="2"
     >
 
+
     <label>Foto / Avatar</label>
 
     <input
         type="text"
         id="foto"
         placeholder="URL de la foto"
+        oninput="actualizarPreview()"
     >
+
+    <img
+        id="previewFoto"
+        class="preview"
+        src="https://via.placeholder.com/100"
+        alt="Vista previa"
+    >
+
 
     <label>ELO</label>
 
@@ -343,6 +379,7 @@ label{
         value="1000"
     >
 
+
     <label>Victorias</label>
 
     <input
@@ -350,6 +387,7 @@ label{
         id="victorias"
         value="0"
     >
+
 
     <label>Derrotas</label>
 
@@ -359,6 +397,7 @@ label{
         value="0"
     >
 
+
     <label>Racha</label>
 
     <input
@@ -366,6 +405,7 @@ label{
         id="racha"
         value="0"
     >
+
 
     <label>Último resultado</label>
 
@@ -385,6 +425,7 @@ label{
 
     </select>
 
+
     <label>Último rival</label>
 
     <input
@@ -393,27 +434,32 @@ label{
         placeholder="Nombre del rival"
     >
 
+
     <div class="editor-buttons">
 
         <button
             class="btn-green"
-            onclick="guardarJugador()">
+            onclick="guardarJugador()"
+        >
             💾 GUARDAR
         </button>
 
         <button
             class="btn-gray"
-            onclick="cancelarEdicion()">
+            onclick="cancelarEdicion()"
+        >
             CANCELAR
         </button>
 
         <button
             class="btn-red"
-            onclick="eliminarJugador()">
+            onclick="eliminarJugador()"
+        >
             🗑️ ELIMINAR
         </button>
 
     </div>
+
 
     <div
         id="editorMessage"
@@ -421,6 +467,7 @@ label{
     </div>
 
 </div>
+
 
 </div>
 
@@ -484,17 +531,21 @@ const firebaseConfig = {
 
     measurementId:
     "G-HVR8GD1RF1"
+
 };
 
 
 const app =
     initializeApp(firebaseConfig);
 
+
 const auth =
     getAuth(app);
 
+
 const database =
     getDatabase(app);
+
 
 
 /* ==========================================
@@ -509,16 +560,20 @@ window.login = async function(){
         .value
         .trim();
 
+
     const password =
         document
         .getElementById("password")
         .value;
 
+
     const error =
         document
         .getElementById("loginError");
 
+
     error.textContent = "";
+
 
     if(!email || !password){
 
@@ -526,7 +581,9 @@ window.login = async function(){
         "Escribe tu correo y contraseña.";
 
         return;
+
     }
+
 
     try{
 
@@ -548,6 +605,7 @@ window.login = async function(){
 };
 
 
+
 /* ==========================================
    LOGOUT
 ========================================== */
@@ -557,6 +615,7 @@ window.logout = async function(){
     await signOut(auth);
 
 };
+
 
 
 /* ==========================================
@@ -572,15 +631,18 @@ onAuthStateChanged(auth,(user)=>{
         .classList
         .add("hidden");
 
+
         document
         .getElementById("adminSection")
         .classList
         .remove("hidden");
 
+
         document
         .getElementById("adminEmail")
         .textContent =
         "Administrador: " + user.email;
+
 
         cargarJugadores();
 
@@ -590,6 +652,7 @@ onAuthStateChanged(auth,(user)=>{
         .getElementById("loginSection")
         .classList
         .remove("hidden");
+
 
         document
         .getElementById("adminSection")
@@ -601,6 +664,7 @@ onAuthStateChanged(auth,(user)=>{
 });
 
 
+
 /* ==========================================
    CARGAR JUGADORES
 ========================================== */
@@ -610,100 +674,113 @@ function cargarJugadores(){
     const jugadoresRef =
         ref(database,"jugadores");
 
-    onValue(jugadoresRef,(snapshot)=>{
 
-        const data =
-            snapshot.val();
+    onValue(
+        jugadoresRef,
+        (snapshot)=>{
 
-        const container =
-            document
-            .getElementById("playersList");
+            const data =
+                snapshot.val();
 
-        container.innerHTML = "";
 
-        if(!data){
+            const container =
+                document
+                .getElementById("playersList");
 
-            container.innerHTML =
-            "<p>No hay jugadores registrados todavía.</p>";
 
-            return;
+            container.innerHTML = "";
+
+
+            if(!data){
+
+                container.innerHTML =
+                "<p>No hay jugadores registrados todavía.</p>";
+
+                return;
+
+            }
+
+
+            Object.entries(data).forEach(
+                ([id,jugador])=>{
+
+
+                    const div =
+                        document.createElement("div");
+
+
+                    div.className =
+                        "player";
+
+
+                    const foto =
+                        jugador.foto ||
+                        "https://via.placeholder.com/100";
+
+
+                    div.innerHTML = `
+
+                        <div class="player-info">
+
+                            <img
+                                class="avatar"
+                                src="${foto}"
+                                onerror="this.src='https://via.placeholder.com/100'"
+                            >
+
+                            <div>
+
+                                <strong>
+                                    ${jugador.nombre || "Sin nombre"}
+                                </strong>
+
+                                <br>
+
+                                <small>
+
+                                    ${jugador.codigoPais || ""}
+                                    ${jugador.pais || ""}
+
+                                    · ELO:
+                                    ${jugador.elo || 1000}
+
+                                    <br>
+
+                                    🟢 ${jugador.victorias || 0}
+                                    /
+                                    🔴 ${jugador.derrotas || 0}
+
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="actions">
+
+                            <button
+                                class="btn-green"
+                                onclick="editarJugador('${id}')"
+                            >
+                                ✏️ EDITAR
+                            </button>
+
+                        </div>
+
+                    `;
+
+
+                    container.appendChild(div);
+
+                }
+            );
+
         }
-
-
-        Object.entries(data).forEach(
-        ([id,jugador])=>{
-
-            const div =
-                document.createElement("div");
-
-            div.className =
-                "player";
-
-
-            const foto =
-                jugador.foto ||
-                "https://via.placeholder.com/100";
-
-
-            div.innerHTML = `
-
-                <div class="player-info">
-
-                    <img
-                        class="avatar"
-                        src="${foto}"
-                    >
-
-                    <div>
-
-                        <strong>
-                            ${jugador.nombre || "Sin nombre"}
-                        </strong>
-
-                        <br>
-
-                        <small>
-
-                            ${jugador.codigoPais || ""}
-                            ${jugador.pais || ""}
-
-                            · ELO:
-                            ${jugador.elo || 1000}
-
-                            <br>
-
-                            🟢 ${jugador.victorias || 0}
-                            /
-                            🔴 ${jugador.derrotas || 0}
-
-                        </small>
-
-                    </div>
-
-                </div>
-
-
-                <div class="actions">
-
-                    <button
-                        class="btn-green"
-                        onclick="editarJugador('${id}')">
-
-                        ✏️ EDITAR
-
-                    </button>
-
-                </div>
-
-            `;
-
-            container.appendChild(div);
-
-        });
-
-    });
+    );
 
 }
+
 
 
 /* ==========================================
@@ -716,6 +793,7 @@ window.nuevoJugador = function(){
     .getElementById("editor")
     .classList
     .remove("hidden");
+
 
     document
     .getElementById("editorTitle")
@@ -732,47 +810,61 @@ window.nuevoJugador = function(){
     .getElementById("nombre")
     .value = "";
 
+
     document
     .getElementById("pais")
     .value = "";
+
 
     document
     .getElementById("codigoPais")
     .value = "";
 
+
     document
     .getElementById("foto")
     .value = "";
+
 
     document
     .getElementById("elo")
     .value = 1000;
 
+
     document
     .getElementById("victorias")
     .value = 0;
+
 
     document
     .getElementById("derrotas")
     .value = 0;
 
+
     document
     .getElementById("racha")
     .value = 0;
+
 
     document
     .getElementById("ultimoResultado")
     .value = "";
 
+
     document
     .getElementById("ultimoRival")
     .value = "";
+
 
     document
     .getElementById("editorMessage")
     .textContent = "";
 
+
+    actualizarPreview();
+
 };
+
 
 
 /* ==========================================
@@ -784,12 +876,14 @@ window.editarJugador = function(id){
     const jugadorRef =
         ref(database,"jugadores/" + id);
 
+
     onValue(
         jugadorRef,
         (snapshot)=>{
 
             const jugador =
                 snapshot.val();
+
 
             if(!jugador){
 
@@ -798,6 +892,7 @@ window.editarJugador = function(id){
                 );
 
                 return;
+
             }
 
 
@@ -845,25 +940,25 @@ window.editarJugador = function(id){
             document
             .getElementById("elo")
             .value =
-            jugador.elo || 1000;
+            jugador.elo ?? 1000;
 
 
             document
             .getElementById("victorias")
             .value =
-            jugador.victorias || 0;
+            jugador.victorias ?? 0;
 
 
             document
             .getElementById("derrotas")
             .value =
-            jugador.derrotas || 0;
+            jugador.derrotas ?? 0;
 
 
             document
             .getElementById("racha")
             .value =
-            jugador.racha || 0;
+            jugador.racha ?? 0;
 
 
             document
@@ -877,6 +972,9 @@ window.editarJugador = function(id){
             .value =
             jugador.ultimoRival || "";
 
+
+            actualizarPreview();
+
         },
         {
             onlyOnce:true
@@ -886,8 +984,42 @@ window.editarJugador = function(id){
 };
 
 
+
 /* ==========================================
-   GUARDAR
+   VISTA PREVIA FOTO
+========================================== */
+
+window.actualizarPreview = function(){
+
+    const url =
+        document
+        .getElementById("foto")
+        .value
+        .trim();
+
+
+    const preview =
+        document
+        .getElementById("previewFoto");
+
+
+    if(url){
+
+        preview.src = url;
+
+    }else{
+
+        preview.src =
+        "https://via.placeholder.com/100";
+
+    }
+
+};
+
+
+
+/* ==========================================
+   GUARDAR JUGADOR
 ========================================== */
 
 window.guardarJugador = async function(){
@@ -913,6 +1045,7 @@ window.guardarJugador = async function(){
         );
 
         return;
+
     }
 
 
@@ -926,86 +1059,86 @@ window.guardarJugador = async function(){
 
         nombre:
 
-        document
-        .getElementById("nombre")
-        .value
-        .trim(),
+            document
+            .getElementById("nombre")
+            .value
+            .trim(),
 
 
         pais:
 
-        document
-        .getElementById("pais")
-        .value
-        .trim(),
+            document
+            .getElementById("pais")
+            .value
+            .trim(),
 
 
         codigoPais:
 
-        document
-        .getElementById("codigoPais")
-        .value
-        .trim()
-        .toUpperCase(),
+            document
+            .getElementById("codigoPais")
+            .value
+            .trim()
+            .toUpperCase(),
 
 
         foto:
 
-        document
-        .getElementById("foto")
-        .value
-        .trim(),
+            document
+            .getElementById("foto")
+            .value
+            .trim(),
 
 
         elo:
 
-        Number(
-            document
-            .getElementById("elo")
-            .value
-        ) || 1000,
+            Number(
+                document
+                .getElementById("elo")
+                .value
+            ) || 1000,
 
 
         victorias:
 
-        Number(
-            document
-            .getElementById("victorias")
-            .value
-        ) || 0,
+            Number(
+                document
+                .getElementById("victorias")
+                .value
+            ) || 0,
 
 
         derrotas:
 
-        Number(
-            document
-            .getElementById("derrotas")
-            .value
-        ) || 0,
+            Number(
+                document
+                .getElementById("derrotas")
+                .value
+            ) || 0,
 
 
         racha:
 
-        Number(
-            document
-            .getElementById("racha")
-            .value
-        ) || 0,
+            Number(
+                document
+                .getElementById("racha")
+                .value
+            ) || 0,
 
 
         ultimoResultado:
 
-        document
-        .getElementById("ultimoResultado")
-        .value,
+            document
+            .getElementById("ultimoResultado")
+            .value,
 
 
         ultimoRival:
 
-        document
-        .getElementById("ultimoRival")
-        .value
-        .trim()
+            document
+            .getElementById("ultimoRival")
+            .value
+            .trim()
 
     };
 
@@ -1047,6 +1180,7 @@ window.guardarJugador = async function(){
 };
 
 
+
 /* ==========================================
    CANCELAR
 ========================================== */
@@ -1059,6 +1193,7 @@ window.cancelarEdicion = function(){
     .add("hidden");
 
 };
+
 
 
 /* ==========================================
@@ -1080,6 +1215,7 @@ window.eliminarJugador = async function(){
         );
 
         return;
+
     }
 
 
@@ -1100,6 +1236,7 @@ window.eliminarJugador = async function(){
     if(!confirmar){
 
         return;
+
     }
 
 
