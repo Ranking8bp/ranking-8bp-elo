@@ -1603,6 +1603,253 @@ tbody tr:hover{
 }
 
 </style>
+
+<style id="ranking8bp-spectator-style">
+/* =========================================================
+   RANKING 8BP — MODO ESPECTADOR
+   Conserva el diseño original.
+   El público solamente puede consultar jugadores y perfiles.
+   ========================================================= */
+
+/* -------- MODAL DE JUGADORES: SOLO CONSULTA -------- */
+
+#playersModal .player-form,
+#playersModal .delete-warning,
+#playersModal .edit-player-btn,
+#playersModal .delete-player-btn,
+#playersModal .edit-country-row,
+#playersModal .save-country-btn,
+#playersModal .cancel-country-btn{
+    display:none !important;
+}
+
+#playersModal .players-list{
+    padding-top:20px;
+}
+
+#playersModal .player-list-actions{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+}
+
+#playersModal .player-list-actions .edit-player-btn,
+#playersModal .player-list-actions .delete-player-btn{
+    display:none !important;
+}
+
+/* -------- PERFIL: SOLO LECTURA -------- */
+
+#profileModal.profile-view-mode .profile-edit-grid,
+#profileModal.profile-view-mode .profile-actions,
+#profileModal.profile-view-mode .profile-edit-quick{
+    display:none !important;
+}
+
+#profileModal.profile-view-mode .profile-preview{
+    margin-bottom:0;
+}
+
+/* Nunca mostrar botones de edición en el perfil público */
+#profileModal .profile-edit-quick,
+#profileModal .save-profile-btn,
+#profileModal .cancel-profile-btn{
+    display:none !important;
+}
+
+/* -------- OCULTAR ELEMENTOS ADMIN -------- */
+
+body.modo-espectador .admin-only,
+body.modo-espectador [data-admin-only="true"]{
+    display:none !important;
+}
+</style>
+
+<script id="ranking8bp-spectator-script">
+/* =========================================================
+   MODO ESPECTADOR
+   ========================================================= */
+
+document.body.classList.add("modo-espectador");
+
+const RANKING_8BP_MODO_ESPECTADOR = true;
+
+/* ---------------------------------------------------------
+   JUGADORES
+   --------------------------------------------------------- */
+
+const ranking8bpAbrirJugadoresOriginal = window.abrirJugadores;
+
+window.abrirJugadores = function(){
+
+    const modal = document.getElementById("playersModal");
+
+    if(!modal) return;
+
+    modal.classList.add("show");
+
+    const form = modal.querySelector(".player-form");
+    const warning = modal.querySelector(".delete-warning");
+
+    if(form) form.style.display = "none";
+    if(warning) warning.style.display = "none";
+
+    if(typeof cargarListaJugadores === "function"){
+        cargarListaJugadores();
+    }
+
+};
+
+/* ---------------------------------------------------------
+   BLOQUEAR AGREGAR
+   --------------------------------------------------------- */
+
+const ranking8bpAgregarOriginal = window.agregarJugador;
+
+window.agregarJugador = function(){
+
+    if(RANKING_8BP_MODO_ESPECTADOR){
+        alert("🔒 Solo el administrador puede agregar jugadores.");
+        return;
+    }
+
+    if(typeof ranking8bpAgregarOriginal === "function"){
+        ranking8bpAgregarOriginal();
+    }
+
+};
+
+/* ---------------------------------------------------------
+   BLOQUEAR BORRAR
+   --------------------------------------------------------- */
+
+const ranking8bpBorrarOriginal = window.borrarJugador;
+
+window.borrarJugador = function(nombre){
+
+    if(RANKING_8BP_MODO_ESPECTADOR){
+        alert("🔒 Solo el administrador puede borrar jugadores.");
+        return;
+    }
+
+    if(typeof ranking8bpBorrarOriginal === "function"){
+        ranking8bpBorrarOriginal(nombre);
+    }
+
+};
+
+/* ---------------------------------------------------------
+   BLOQUEAR CAMBIO DE PAÍS
+   --------------------------------------------------------- */
+
+const ranking8bpGuardarPaisOriginal = window.guardarPais;
+
+window.guardarPais = function(index){
+
+    if(RANKING_8BP_MODO_ESPECTADOR){
+        alert("🔒 Solo el administrador puede cambiar el país.");
+        return;
+    }
+
+    if(typeof ranking8bpGuardarPaisOriginal === "function"){
+        ranking8bpGuardarPaisOriginal(index);
+    }
+
+};
+
+/* ---------------------------------------------------------
+   BLOQUEAR EDICIÓN DEL PERFIL
+   --------------------------------------------------------- */
+
+window.activarEdicionPerfil = function(){
+
+    if(RANKING_8BP_MODO_ESPECTADOR){
+        alert("🔒 Este perfil es de solo lectura para espectadores.");
+        return;
+    }
+
+};
+
+/* ---------------------------------------------------------
+   BLOQUEAR GUARDADO DEL PERFIL
+   --------------------------------------------------------- */
+
+const ranking8bpGuardarPerfilOriginal = window.guardarPerfil;
+
+window.guardarPerfil = function(){
+
+    if(RANKING_8BP_MODO_ESPECTADOR){
+        alert("🔒 Solo el administrador puede modificar perfiles.");
+        return;
+    }
+
+    if(typeof ranking8bpGuardarPerfilOriginal === "function"){
+        ranking8bpGuardarPerfilOriginal();
+    }
+
+};
+
+/* ---------------------------------------------------------
+   PERFIL PÚBLICO
+   --------------------------------------------------------- */
+
+window.abrirPerfilRapidoPorNombre = function(nombre){
+
+    if(typeof abrirPerfilPorNombre === "function"){
+        abrirPerfilPorNombre(nombre);
+    }
+
+    setTimeout(()=>{
+
+        const modal = document.getElementById("profileModal");
+
+        if(!modal) return;
+
+        modal.classList.add("show");
+        modal.classList.add("profile-view-mode");
+
+        const editar = modal.querySelector(".profile-edit-quick");
+        const grid = modal.querySelector(".profile-edit-grid");
+        const actions = modal.querySelector(".profile-actions");
+
+        if(editar) editar.style.display = "none";
+        if(grid) grid.style.display = "none";
+        if(actions) actions.style.display = "none";
+
+    },50);
+
+};
+
+/* ---------------------------------------------------------
+   OCULTAR CONTROLES AL CARGAR
+   --------------------------------------------------------- */
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+    document.querySelectorAll(
+        ".edit-player-btn," +
+        ".delete-player-btn," +
+        ".save-country-btn," +
+        ".cancel-country-btn," +
+        ".profile-edit-quick," +
+        ".save-profile-btn," +
+        ".cancel-profile-btn"
+    ).forEach(elemento=>{
+        elemento.style.display = "none";
+    });
+
+    const form =
+        document.querySelector("#playersModal .player-form");
+
+    const warning =
+        document.querySelector("#playersModal .delete-warning");
+
+    if(form) form.style.display = "none";
+    if(warning) warning.style.display = "none";
+
+});
+</script>
+
 </head>
 
 <body>
@@ -1640,7 +1887,7 @@ tbody tr:hover{
         </button>
 
         <button>
-            👤 &nbsp; NUEVOS JUGADORES
+            👤 &nbsp; JUGADORES
         </button>
 
         <button>
@@ -3318,9 +3565,21 @@ function abrirPerfilRapidoPorNombre(nombre){
 
     setTimeout(()=>{
 
-        activarEdicionPerfil();
+        const modal = document.getElementById("profileModal");
 
-    },150);
+        if(!modal) return;
+
+        modal.classList.add("profile-view-mode");
+
+        const editar = modal.querySelector(".profile-edit-quick");
+        const grid = modal.querySelector(".profile-edit-grid");
+        const actions = modal.querySelector(".profile-actions");
+
+        if(editar) editar.style.display = "none";
+        if(grid) grid.style.display = "none";
+        if(actions) actions.style.display = "none";
+
+    },50);
 
 }
 
@@ -3396,8 +3655,18 @@ function abrirPerfilPorIndice(indice){
 
     actualizarVistaPerfil();
 
-    document.getElementById("profileModal").classList.add("show");
-    document.getElementById("profileModal").classList.remove("profile-view-mode");
+    const profileModal = document.getElementById("profileModal");
+
+    profileModal.classList.add("show");
+    profileModal.classList.add("profile-view-mode");
+
+    const editQuick = profileModal.querySelector(".profile-edit-quick");
+    const editGrid = profileModal.querySelector(".profile-edit-grid");
+    const profileActions = profileModal.querySelector(".profile-actions");
+
+    if(editQuick) editQuick.style.display = "none";
+    if(editGrid) editGrid.style.display = "none";
+    if(profileActions) profileActions.style.display = "none";
 
 }
 
