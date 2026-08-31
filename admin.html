@@ -2570,6 +2570,27 @@ function abrirPerfilPorJugador(jugador,modoEdicion=true){
     document.getElementById("editProfileBio").value =
         jugador.bio || "";
 
+    document.getElementById("editProfileElo").value =
+        Number(jugador.elo ?? 1000);
+
+    document.getElementById("editProfileWins").value =
+        Number(jugador.ganadas ?? 0);
+
+    document.getElementById("editProfileLosses").value =
+        Number(jugador.perdidas ?? 0);
+
+    document.getElementById("editProfileStreak").value =
+        Number(jugador.racha ?? 0);
+
+    document.getElementById("editProfileResult").value =
+        jugador.resultado || "";
+
+    document.getElementById("editProfileRival").value =
+        jugador.rival || "";
+
+    document.getElementById("editProfileTime").value =
+        jugador.tiempo || "";
+
     const input =
         document.getElementById("editProfilePhoto");
 
@@ -2705,16 +2726,16 @@ function actualizarVistaPerfil(){
         bio;
 
     document.getElementById("profilePreviewElo").textContent =
-        jugadorPerfilActual.elo ?? 1000;
+        Number(document.getElementById("editProfileElo")?.value ?? jugadorPerfilActual.elo ?? 1000);
 
     document.getElementById("profilePreviewWins").textContent =
-        jugadorPerfilActual.ganadas ?? 0;
+        Number(document.getElementById("editProfileWins")?.value ?? jugadorPerfilActual.ganadas ?? 0);
 
     document.getElementById("profilePreviewLosses").textContent =
-        jugadorPerfilActual.perdidas ?? 0;
+        Number(document.getElementById("editProfileLosses")?.value ?? jugadorPerfilActual.perdidas ?? 0);
 
     document.getElementById("profilePreviewStreak").textContent =
-        jugadorPerfilActual.racha ?? 0;
+        Number(document.getElementById("editProfileStreak")?.value ?? jugadorPerfilActual.racha ?? 0);
 
     const avatarBox =
         document.getElementById("profilePreviewAvatar");
@@ -2771,7 +2792,14 @@ function actualizarVistaPerfil(){
     "editProfileCountry",
     "editProfileNick",
     "editProfileAvatar",
-    "editProfileBio"
+    "editProfileBio",
+    "editProfileElo",
+    "editProfileWins",
+    "editProfileLosses",
+    "editProfileStreak",
+    "editProfileResult",
+    "editProfileRival",
+    "editProfileTime"
 ].forEach(id=>{
 
     const elemento =
@@ -2945,27 +2973,26 @@ window.guardarPerfil = async function(){
 
         bio: bio,
 
-        elo: Number(jugadorPerfilActual.elo ?? 1000),
+        elo: Number(document.getElementById("editProfileElo").value) || 0,
 
-        eloMaximo: Number(
-            jugadorPerfilActual.eloMaximo ??
-            jugadorPerfilActual.elo ??
-            1000
+        eloMaximo: Math.max(
+            Number(jugadorPerfilActual.eloMaximo ?? 0),
+            Number(document.getElementById("editProfileElo").value) || 0
         ),
 
         cambio: Number(jugadorPerfilActual.cambio ?? 0),
 
-        ganadas: Number(jugadorPerfilActual.ganadas ?? 0),
+        ganadas: Number(document.getElementById("editProfileWins").value) || 0,
 
-        perdidas: Number(jugadorPerfilActual.perdidas ?? 0),
+        perdidas: Number(document.getElementById("editProfileLosses").value) || 0,
 
-        racha: Number(jugadorPerfilActual.racha ?? 0),
+        racha: Number(document.getElementById("editProfileStreak").value) || 0,
 
-        resultado: jugadorPerfilActual.resultado || "---",
+        resultado: document.getElementById("editProfileResult").value || "---",
 
-        rival: jugadorPerfilActual.rival || "",
+        rival: document.getElementById("editProfileRival").value.trim(),
 
-        tiempo: jugadorPerfilActual.tiempo || "--",
+        tiempo: document.getElementById("editProfileTime").value.trim() || "--",
 
         ultimaPartida:
             jugadorPerfilActual.ultimaPartida || ""
@@ -4076,6 +4103,47 @@ function escapeAttr(value){
                     <div class="profile-avatar-help">
                         Puedes subir JPG, PNG, WEBP o GIF. Si no hay foto, se mostrará el avatar.
                     </div>
+                </div>
+
+                <div class="profile-field">
+                    <label>ELO</label>
+                    <input id="editProfileElo" type="number" min="0" max="10000" step="1">
+                </div>
+
+                <div class="profile-field">
+                    <label>Victorias</label>
+                    <input id="editProfileWins" type="number" min="0" step="1">
+                </div>
+
+                <div class="profile-field">
+                    <label>Derrotas</label>
+                    <input id="editProfileLosses" type="number" min="0" step="1">
+                </div>
+
+                <div class="profile-field">
+                    <label>Racha</label>
+                    <input id="editProfileStreak" type="number" step="1">
+                </div>
+
+                <div class="profile-field">
+                    <label>Último resultado</label>
+                    <select id="editProfileResult">
+                        <option value="">Sin resultado</option>
+                        <option value="VICTORIA">VICTORIA</option>
+                        <option value="DERROTA">DERROTA</option>
+                    </select>
+                </div>
+
+                <div class="profile-field">
+                    <label>Último rival</label>
+                    <input id="editProfileRival" type="text" maxlength="50"
+                           placeholder="Nombre del rival">
+                </div>
+
+                <div class="profile-field">
+                    <label>Hora / fecha última partida</label>
+                    <input id="editProfileTime" type="text" maxlength="50"
+                           placeholder="Ej. 30/08/2026 18:30">
                 </div>
 
                 <div class="profile-field full">
