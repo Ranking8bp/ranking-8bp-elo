@@ -1602,253 +1602,152 @@ tbody tr:hover{
     object-fit:contain;
 }
 
+
+/* =========================
+   MODO ESPECTADOR - SEGURIDAD UI
+========================= */
+.spectator-hidden{display:none !important;}
+.spectator-readonly{pointer-events:none;opacity:.72;}
+/* El formulario de registro de partidas no existe para el público. */
+#matchModal{display:none !important;}
+
 </style>
 
-<style id="ranking8bp-spectator-style">
+<style id="perfil-vertical-1080x1920">
 /* =========================================================
-   RANKING 8BP — MODO ESPECTADOR
-   Conserva el diseño original.
-   El público solamente puede consultar jugadores y perfiles.
+   PERFIL DE JUGADOR — VISTA GRANDE PARA CELULAR VERTICAL
+   Optimizado para pantallas 1080x1920
    ========================================================= */
 
-/* -------- MODAL DE JUGADORES: SOLO CONSULTA -------- */
+@media (max-width: 700px) and (orientation: portrait){
 
-#playersModal .player-form,
-#playersModal .delete-warning,
-#playersModal .edit-player-btn,
-#playersModal .delete-player-btn,
-#playersModal .edit-country-row,
-#playersModal .save-country-btn,
-#playersModal .cancel-country-btn{
-    display:none !important;
+    #profileModal{
+        padding: 12px !important;
+        align-items: flex-start !important;
+        overflow-y: auto !important;
+    }
+
+    #profileModal .profile-modal{
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: calc(100vh - 24px) !important;
+        margin: 0 auto !important;
+        border-radius: 18px !important;
+        padding: 22px !important;
+    }
+
+    #profileModal .profile-preview{
+        width: 100% !important;
+        padding: 28px 20px !important;
+        border-radius: 16px !important;
+    }
+
+    #profileModal #profilePreviewAvatar{
+        width: 150px !important;
+        height: 150px !important;
+        min-width: 150px !important;
+        font-size: 58px !important;
+        margin: 0 auto 20px !important;
+    }
+
+    #profileModal #profilePreviewAvatar img{
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        border-radius: 50% !important;
+    }
+
+    #profileModal #profilePreviewName{
+        font-size: clamp(28px, 7vw, 46px) !important;
+        line-height: 1.05 !important;
+        margin: 10px 0 !important;
+        text-align: center !important;
+        word-break: break-word !important;
+    }
+
+    #profileModal #profilePreviewCountry{
+        font-size: 18px !important;
+        justify-content: center !important;
+        margin: 10px 0 !important;
+    }
+
+    #profileModal #profilePreviewNick{
+        font-size: 17px !important;
+        margin: 8px 0 14px !important;
+        text-align: center !important;
+    }
+
+    #profileModal #profilePreviewBio{
+        font-size: 16px !important;
+        line-height: 1.5 !important;
+        text-align: center !important;
+        max-width: 700px !important;
+        margin: 0 auto 22px !important;
+    }
+
+    #profileModal .profile-stats{
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        width: 100% !important;
+        margin-top: 20px !important;
+    }
+
+    #profileModal .profile-stat{
+        min-height: 90px !important;
+        padding: 15px 10px !important;
+        border-radius: 12px !important;
+    }
+
+    #profileModal .profile-stat strong{
+        font-size: 27px !important;
+    }
+
+    #profileModal .profile-stat span{
+        font-size: 11px !important;
+    }
+
+    #profileModal .profile-close,
+    #profileModal .close-profile{
+        width: 44px !important;
+        height: 44px !important;
+        font-size: 24px !important;
+    }
 }
 
-#playersModal .players-list{
-    padding-top:20px;
-}
+/* Para celulares muy altos/ancho cercano a 1080 CSS px */
+@media (min-width: 701px) and (max-width: 1100px) and (orientation: portrait){
 
-#playersModal .player-list-actions{
-    display:flex;
-    align-items:center;
-    justify-content:flex-end;
-}
+    #profileModal .profile-modal{
+        width: 94vw !important;
+        max-width: 1000px !important;
+        padding: 35px !important;
+    }
 
-#playersModal .player-list-actions .edit-player-btn,
-#playersModal .player-list-actions .delete-player-btn{
-    display:none !important;
-}
+    #profileModal .profile-preview{
+        padding: 45px 35px !important;
+    }
 
-/* -------- PERFIL: SOLO LECTURA -------- */
+    #profileModal #profilePreviewAvatar{
+        width: 190px !important;
+        height: 190px !important;
+    }
 
-#profileModal.profile-view-mode .profile-edit-grid,
-#profileModal.profile-view-mode .profile-actions,
-#profileModal.profile-view-mode .profile-edit-quick{
-    display:none !important;
-}
+    #profileModal #profilePreviewName{
+        font-size: 48px !important;
+    }
 
-#profileModal.profile-view-mode .profile-preview{
-    margin-bottom:0;
-}
+    #profileModal #profilePreviewBio{
+        font-size: 19px !important;
+        line-height: 1.55 !important;
+    }
 
-/* Nunca mostrar botones de edición en el perfil público */
-#profileModal .profile-edit-quick,
-#profileModal .save-profile-btn,
-#profileModal .cancel-profile-btn{
-    display:none !important;
-}
-
-/* -------- OCULTAR ELEMENTOS ADMIN -------- */
-
-body.modo-espectador .admin-only,
-body.modo-espectador [data-admin-only="true"]{
-    display:none !important;
+    #profileModal .profile-stats{
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 15px !important;
+    }
 }
 </style>
-
-<script id="ranking8bp-spectator-script">
-/* =========================================================
-   MODO ESPECTADOR
-   ========================================================= */
-
-document.body.classList.add("modo-espectador");
-
-const RANKING_8BP_MODO_ESPECTADOR = true;
-
-/* ---------------------------------------------------------
-   JUGADORES
-   --------------------------------------------------------- */
-
-const ranking8bpAbrirJugadoresOriginal = window.abrirJugadores;
-
-window.abrirJugadores = function(){
-
-    const modal = document.getElementById("playersModal");
-
-    if(!modal) return;
-
-    modal.classList.add("show");
-
-    const form = modal.querySelector(".player-form");
-    const warning = modal.querySelector(".delete-warning");
-
-    if(form) form.style.display = "none";
-    if(warning) warning.style.display = "none";
-
-    if(typeof cargarListaJugadores === "function"){
-        cargarListaJugadores();
-    }
-
-};
-
-/* ---------------------------------------------------------
-   BLOQUEAR AGREGAR
-   --------------------------------------------------------- */
-
-const ranking8bpAgregarOriginal = window.agregarJugador;
-
-window.agregarJugador = function(){
-
-    if(RANKING_8BP_MODO_ESPECTADOR){
-        alert("🔒 Solo el administrador puede agregar jugadores.");
-        return;
-    }
-
-    if(typeof ranking8bpAgregarOriginal === "function"){
-        ranking8bpAgregarOriginal();
-    }
-
-};
-
-/* ---------------------------------------------------------
-   BLOQUEAR BORRAR
-   --------------------------------------------------------- */
-
-const ranking8bpBorrarOriginal = window.borrarJugador;
-
-window.borrarJugador = function(nombre){
-
-    if(RANKING_8BP_MODO_ESPECTADOR){
-        alert("🔒 Solo el administrador puede borrar jugadores.");
-        return;
-    }
-
-    if(typeof ranking8bpBorrarOriginal === "function"){
-        ranking8bpBorrarOriginal(nombre);
-    }
-
-};
-
-/* ---------------------------------------------------------
-   BLOQUEAR CAMBIO DE PAÍS
-   --------------------------------------------------------- */
-
-const ranking8bpGuardarPaisOriginal = window.guardarPais;
-
-window.guardarPais = function(index){
-
-    if(RANKING_8BP_MODO_ESPECTADOR){
-        alert("🔒 Solo el administrador puede cambiar el país.");
-        return;
-    }
-
-    if(typeof ranking8bpGuardarPaisOriginal === "function"){
-        ranking8bpGuardarPaisOriginal(index);
-    }
-
-};
-
-/* ---------------------------------------------------------
-   BLOQUEAR EDICIÓN DEL PERFIL
-   --------------------------------------------------------- */
-
-window.activarEdicionPerfil = function(){
-
-    if(RANKING_8BP_MODO_ESPECTADOR){
-        alert("🔒 Este perfil es de solo lectura para espectadores.");
-        return;
-    }
-
-};
-
-/* ---------------------------------------------------------
-   BLOQUEAR GUARDADO DEL PERFIL
-   --------------------------------------------------------- */
-
-const ranking8bpGuardarPerfilOriginal = window.guardarPerfil;
-
-window.guardarPerfil = function(){
-
-    if(RANKING_8BP_MODO_ESPECTADOR){
-        alert("🔒 Solo el administrador puede modificar perfiles.");
-        return;
-    }
-
-    if(typeof ranking8bpGuardarPerfilOriginal === "function"){
-        ranking8bpGuardarPerfilOriginal();
-    }
-
-};
-
-/* ---------------------------------------------------------
-   PERFIL PÚBLICO
-   --------------------------------------------------------- */
-
-window.abrirPerfilRapidoPorNombre = function(nombre){
-
-    if(typeof abrirPerfilPorNombre === "function"){
-        abrirPerfilPorNombre(nombre);
-    }
-
-    setTimeout(()=>{
-
-        const modal = document.getElementById("profileModal");
-
-        if(!modal) return;
-
-        modal.classList.add("show");
-        modal.classList.add("profile-view-mode");
-
-        const editar = modal.querySelector(".profile-edit-quick");
-        const grid = modal.querySelector(".profile-edit-grid");
-        const actions = modal.querySelector(".profile-actions");
-
-        if(editar) editar.style.display = "none";
-        if(grid) grid.style.display = "none";
-        if(actions) actions.style.display = "none";
-
-    },50);
-
-};
-
-/* ---------------------------------------------------------
-   OCULTAR CONTROLES AL CARGAR
-   --------------------------------------------------------- */
-
-document.addEventListener("DOMContentLoaded",()=>{
-
-    document.querySelectorAll(
-        ".edit-player-btn," +
-        ".delete-player-btn," +
-        ".save-country-btn," +
-        ".cancel-country-btn," +
-        ".profile-edit-quick," +
-        ".save-profile-btn," +
-        ".cancel-profile-btn"
-    ).forEach(elemento=>{
-        elemento.style.display = "none";
-    });
-
-    const form =
-        document.querySelector("#playersModal .player-form");
-
-    const warning =
-        document.querySelector("#playersModal .delete-warning");
-
-    if(form) form.style.display = "none";
-    if(warning) warning.style.display = "none";
-
-});
-</script>
 
 </head>
 
@@ -1880,34 +1779,6 @@ document.addEventListener("DOMContentLoaded",()=>{
 
         <button class="active">
             🏆 &nbsp; RANKING MUNDIAL
-        </button>
-
-        <button>
-            👥 &nbsp; TOP JUGADORES
-        </button>
-
-        <button>
-            👤 &nbsp; JUGADORES
-        </button>
-
-        <button>
-            🎱 &nbsp; HISTORIAL DE PARTIDAS
-        </button>
-
-        <button>
-            📊 &nbsp; ESTADÍSTICAS
-        </button>
-
-        <button>
-            🏆 &nbsp; RÉCORDS
-        </button>
-
-        <button>
-            🌎 &nbsp; PAÍSES
-        </button>
-
-        <button>
-            📜 &nbsp; REGLAMENTO
         </button>
 
     </div>
@@ -1957,19 +1828,14 @@ document.addEventListener("DOMContentLoaded",()=>{
 
             <span>INICIO</span>
             <span style="color:#b8ff00;">RANKING</span>
-            <span>JUGADORES</span>
-            <span>PARTIDAS</span>
-            <span>ESTADÍSTICAS</span>
-            <span>RÉCORDS</span>
-            <span>TORNEOS</span>
 
         </div>
 
         <div class="user">
 
             <div class="user-info">
-                <strong>IKAR8BP</strong>
-                <small>ADMIN</small>
+                <strong>RANKING 8BP</strong>
+                <small>ESPECTADOR</small>
             </div>
 
             <div class="user-avatar">
@@ -2033,22 +1899,6 @@ document.addEventListener("DOMContentLoaded",()=>{
 
         <button class="tab active">
             ELO RANKING
-        </button>
-
-        <button class="tab">
-            TOP WIN RATE
-        </button>
-
-        <button class="tab">
-            MÁS VICTORIAS
-        </button>
-
-        <button class="tab">
-            RACHA
-        </button>
-
-        <button class="tab">
-            PAÍSES
         </button>
 
     </div>
@@ -2137,6 +1987,9 @@ document.addEventListener("DOMContentLoaded",()=>{
     firebase.initializeApp(firebaseConfig);
     const rankingDB = firebase.database();
     const rankingRef = rankingDB.ref("jugadores");
+
+    // Esta página es PÚBLICA y funciona exclusivamente como espectador.
+    window.RANKING_ADMIN_MODE = false;
 </script>
 
 <script>
@@ -2754,6 +2607,9 @@ function pintarCambio(id,cambio){
 
 function registrarPartida(){
 
+    alert("🔒 Esta función está disponible únicamente para el administrador.");
+    return;
+
     const i1 = Number(document.getElementById("player1").value);
     const i2 = Number(document.getElementById("player2").value);
 
@@ -2861,7 +2717,13 @@ function registrarPartida(){
 
 function guardarDatos(){
 
-    if(typeof rankingRef === "undefined") return;
+    // Nunca se escribe en Firebase desde el modo espectador.
+    if(!window.RANKING_ADMIN_MODE){
+        console.warn("Escritura bloqueada: modo espectador.");
+        return Promise.reject(new Error("MODO_ESPECTADOR"));
+    }
+
+    if(typeof rankingRef === "undefined") return Promise.reject(new Error("rankingRef no disponible"));
 
     rankingRef.set(jugadores.map(j => ({...j})) )
         .catch(error => {
@@ -2882,9 +2744,11 @@ function cargarDatos(){
         .then(snapshot => {
 
             if(!snapshot.exists()){
-
-                // Primera instalación: subimos los jugadores que ya existen en el HTML.
-                return rankingRef.set(jugadores.map(j => ({...j})));
+                // El espectador NO inicializa ni modifica Firebase.
+                // Si no hay datos todavía, se mantienen los datos locales de respaldo.
+                mostrarRanking(jugadores);
+                actualizarDatosGenerales();
+                return;
             }
 
             const datos = snapshot.val();
@@ -2950,36 +2814,27 @@ function cargarDatos(){
 document.addEventListener("DOMContentLoaded",()=>{
 
     cargarDatos();
-
     mostrarRanking(jugadores);
 
-    document
-        .querySelectorAll(".top-menu span")
-        .forEach(item=>{
+    // En modo espectador PARTIDAS es solo informativo.
+    document.querySelectorAll(".top-menu span").forEach(item=>{
+        if(item.textContent.trim()==="PARTIDAS"){
+            item.style.cursor="pointer";
+            item.addEventListener("click",abrirHistorialSoloLectura);
+        }
+    });
 
-            if(item.textContent.trim()==="PARTIDAS"){
-
-                item.style.cursor="pointer";
-
-                item.addEventListener("click",abrirPartidas);
-
-            }
-
-        });
-
-    document
-        .querySelectorAll(".menu button")
-        .forEach(item=>{
-
-            if(item.textContent.includes("HISTORIAL DE PARTIDAS")){
-
-                item.addEventListener("click",abrirPartidas);
-
-            }
-
-        });
+    document.querySelectorAll(".menu button").forEach(item=>{
+        if(item.textContent.includes("HISTORIAL DE PARTIDAS")){
+            item.addEventListener("click",abrirHistorialSoloLectura);
+        }
+    });
 
 });
+
+function abrirHistorialSoloLectura(){
+    alert("👁️ Modo espectador: el registro de partidas está disponible únicamente para el administrador.");
+}
 
 
 /* =====================================
@@ -2989,8 +2844,11 @@ document.addEventListener("DOMContentLoaded",()=>{
 function abrirJugadores(){
 
     document.getElementById("playersModal").classList.add("show");
-
     document.getElementById("playerSuccess").style.display="none";
+
+    // El público solo puede consultar jugadores.
+    document.querySelectorAll("#playersModal .player-form, #playersModal .delete-warning")
+        .forEach(el=>el.classList.add("spectator-hidden"));
 
     cargarListaJugadores();
 
@@ -3003,6 +2861,12 @@ function cerrarJugadores(){
 }
 
 function agregarJugador(){
+
+    if(!window.RANKING_ADMIN_MODE){
+        alert("🔒 Esta función está disponible únicamente para el administrador.");
+        return;
+    }
+
 
     const nombre =
         document.getElementById("newPlayerName").value.trim();
@@ -3148,18 +3012,6 @@ function cargarListaJugadores(){
                             <div class="player-list-elo">
                                 ${j.elo} ELO
                             </div>
-
-                            <button
-                                class="edit-player-btn"
-                                onclick="mostrarEditarPais(${index})">
-                                ✏️ PAÍS
-                            </button>
-
-                            <button
-                                class="delete-player-btn"
-                                onclick="borrarJugador('${j.nombre.replace(/'/g, "\'")}')">
-                                🗑 BORRAR
-                            </button>
 
                         </div>
 
@@ -3438,6 +3290,12 @@ function ocultarEditarPais(index){
 
 function guardarPais(index){
 
+    if(!window.RANKING_ADMIN_MODE){
+        alert("🔒 Esta función está disponible únicamente para el administrador.");
+        return;
+    }
+
+
     const jugador = jugadores[index];
 
     if(!jugador){
@@ -3475,6 +3333,12 @@ function guardarPais(index){
 
 
 function borrarJugador(nombre){
+
+    if(!window.RANKING_ADMIN_MODE){
+        alert("🔒 Esta función está disponible únicamente para el administrador.");
+        return;
+    }
+
 
     const indice =
         jugadores.findIndex(
@@ -3531,6 +3395,12 @@ function borrarJugador(nombre){
 
 function activarEdicionPerfil(){
 
+    if(!window.RANKING_ADMIN_MODE){
+        alert("🔒 Este perfil es de solo lectura para espectadores.");
+        return;
+    }
+
+
     const modal =
         document.getElementById("profileModal");
 
@@ -3560,27 +3430,7 @@ function activarEdicionPerfil(){
 }
 
 function abrirPerfilRapidoPorNombre(nombre){
-
     abrirPerfilPorNombre(nombre);
-
-    setTimeout(()=>{
-
-        const modal = document.getElementById("profileModal");
-
-        if(!modal) return;
-
-        modal.classList.add("profile-view-mode");
-
-        const editar = modal.querySelector(".profile-edit-quick");
-        const grid = modal.querySelector(".profile-edit-grid");
-        const actions = modal.querySelector(".profile-actions");
-
-        if(editar) editar.style.display = "none";
-        if(grid) grid.style.display = "none";
-        if(actions) actions.style.display = "none";
-
-    },50);
-
 }
 
 
@@ -3655,18 +3505,8 @@ function abrirPerfilPorIndice(indice){
 
     actualizarVistaPerfil();
 
-    const profileModal = document.getElementById("profileModal");
-
-    profileModal.classList.add("show");
-    profileModal.classList.add("profile-view-mode");
-
-    const editQuick = profileModal.querySelector(".profile-edit-quick");
-    const editGrid = profileModal.querySelector(".profile-edit-grid");
-    const profileActions = profileModal.querySelector(".profile-actions");
-
-    if(editQuick) editQuick.style.display = "none";
-    if(editGrid) editGrid.style.display = "none";
-    if(profileActions) profileActions.style.display = "none";
+    document.getElementById("profileModal").classList.add("show");
+    document.getElementById("profileModal").classList.add("profile-view-mode");
 
 }
 
@@ -3760,6 +3600,12 @@ function actualizarVistaPerfil(){
 }
 
 function guardarPerfil(){
+
+    if(!window.RANKING_ADMIN_MODE){
+        alert("🔒 Esta función está disponible únicamente para el administrador.");
+        return;
+    }
+
 
     if(!jugadorPerfilActual) return;
 
@@ -3973,6 +3819,12 @@ function prepararFotoPerfil(){
 }
 
 function quitarFotoPerfil(){
+
+    if(!window.RANKING_ADMIN_MODE){
+        alert("🔒 Este perfil es de solo lectura para espectadores.");
+        return;
+    }
+
 
     nuevaFotoPerfil = null;
     quitarFotoSolicitada = true;
@@ -4495,7 +4347,7 @@ mostrarRanking(jugadores);
 
             <div style="display:flex;gap:8px;align-items:center;">
 
-                <button class="profile-edit-quick"
+                <button class="profile-edit-quick spectator-hidden"
                     onclick="activarEdicionPerfil()">
                     ✏️ EDITAR PERFIL
                 </button>
@@ -4560,7 +4412,7 @@ mostrarRanking(jugadores);
 
             </div>
 
-            <div class="profile-edit-grid">
+            <div class="profile-edit-grid spectator-hidden">
 
                 <div class="profile-field">
                     <label>Nombre</label>
@@ -4626,7 +4478,7 @@ mostrarRanking(jugadores);
 
             </div>
 
-            <div class="profile-actions">
+            <div class="profile-actions spectator-hidden">
 
                 <button class="cancel-profile-btn" onclick="cerrarPerfil()">
                     CANCELAR
@@ -4644,5 +4496,230 @@ mostrarRanking(jugadores);
     </div>
 </div>
 
+
+
+<!-- =====================================================
+     SECCIONES PÚBLICAS DEL MODO ESPECTADOR
+     ===================================================== -->
+<div class="public-modal-overlay" id="publicInfoModal">
+  <div class="public-info-modal">
+    <div class="public-info-head">
+      <h3 id="publicInfoTitle">INFORMACIÓN</h3>
+      <button onclick="cerrarInfoPublica()">✕</button>
+    </div>
+    <div id="publicInfoContent" class="public-info-content"></div>
+  </div>
+</div>
+
+<style>
+.public-modal-overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  background:rgba(0,0,0,.82);
+  backdrop-filter:blur(7px);
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.public-modal-overlay.show{display:flex;}
+.public-info-modal{
+  width:min(900px,96vw);
+  max-height:88vh;
+  overflow:auto;
+  background:#061012;
+  border:1px solid #294348;
+  border-radius:16px;
+  box-shadow:0 20px 70px rgba(0,0,0,.65);
+}
+.public-info-head{
+  position:sticky;
+  top:0;
+  z-index:2;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px 22px;
+  background:#081012;
+  border-bottom:1px solid #1b3034;
+}
+.public-info-head h3{
+  margin:0;
+  color:#b8ff00;
+  font-size:20px;
+}
+.public-info-head button{
+  background:#081012;
+  color:#fff;
+  border:1px solid #294348;
+  border-radius:8px;
+  padding:9px 13px;
+  cursor:pointer;
+}
+.public-info-content{padding:22px;}
+.public-section-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+.public-card{
+  background:#081517;
+  border:1px solid #1b3034;
+  border-radius:12px;
+  padding:17px;
+}
+.public-card h4{margin:0 0 8px;color:#b8ff00;}
+.public-card strong{font-size:24px;}
+.public-table{width:100%;border-collapse:collapse;}
+.public-table th,.public-table td{
+  padding:11px 9px;
+  border-bottom:1px solid #1b3034;
+  text-align:left;
+}
+.public-table th{color:#b8ff00;font-size:12px;}
+.public-rank{color:#b8ff00;font-weight:bold;}
+.public-empty{padding:20px;text-align:center;color:#9ca6a7;}
+.public-rule{
+  margin-bottom:12px;
+  padding:14px;
+  border-left:3px solid #b8ff00;
+  background:#081517;
+  border-radius:7px;
+}
+@media(max-width:650px){
+  .public-section-grid{grid-template-columns:1fr;}
+  .public-info-content{padding:15px;}
+}
+</style>
+
+<script>
+/* =====================================================
+   NAVEGACIÓN PÚBLICA
+   Los espectadores SOLO consultan información.
+   ===================================================== */
+(function(){
+  function el(id){ return document.getElementById(id); }
+
+  window.cerrarInfoPublica=function(){
+    const modal=el('publicInfoModal');
+    if(modal) modal.classList.remove('show');
+  };
+
+  function abrirInfoPublica(titulo,html){
+    el('publicInfoTitle').textContent=titulo;
+    el('publicInfoContent').innerHTML=html;
+    el('publicInfoModal').classList.add('show');
+  }
+
+  function listaJugadoresActual(){
+    if(Array.isArray(window.jugadores)) return window.jugadores.slice();
+    return [];
+  }
+
+  function nombreSeguro(j){ return j.nombre || 'SIN NOMBRE'; }
+  function paisSeguro(j){ return j.pais || 'Sin país'; }
+  function eloSeguro(j){ return Number(j.elo)||1000; }
+  function wins(j){ return Number(j.ganadas)||0; }
+  function losses(j){ return Number(j.perdidas)||0; }
+  function total(j){ return wins(j)+losses(j); }
+
+  window.abrirEstadisticasPublicas=function(){
+    const lista=listaJugadoresActual().sort((a,b)=>eloSeguro(b)-eloSeguro(a));
+    const partidas=Math.round(lista.reduce((s,j)=>s+total(j),0)/2);
+    const promedio=lista.length ? Math.round(lista.reduce((s,j)=>s+eloSeguro(j),0)/lista.length) : 0;
+    const victorias=lista.reduce((s,j)=>s+wins(j),0);
+    const derrotas=lista.reduce((s,j)=>s+losses(j),0);
+    const mejor=lista[0];
+    abrirInfoPublica('📊 ESTADÍSTICAS',`
+      <div class="public-section-grid">
+        <div class="public-card"><h4>👥 JUGADORES</h4><strong>${lista.length}</strong></div>
+        <div class="public-card"><h4>🎱 PARTIDAS</h4><strong>${partidas}</strong></div>
+        <div class="public-card"><h4>📈 ELO PROMEDIO</h4><strong>${promedio}</strong></div>
+        <div class="public-card"><h4>🏆 VICTORIAS</h4><strong>${victorias}</strong></div>
+        <div class="public-card"><h4>❌ DERROTAS</h4><strong>${derrotas}</strong></div>
+        <div class="public-card"><h4>👑 LÍDER ACTUAL</h4><strong>${mejor?nombreSeguro(mejor):'---'}</strong><br><span>${mejor?eloSeguro(mejor):0} ELO</span></div>
+      </div>
+    `);
+  };
+
+  window.abrirRecordsPublicos=function(){
+    const lista=listaJugadoresActual();
+    const mayorElo=lista.slice().sort((a,b)=>eloSeguro(b)-eloSeguro(a))[0];
+    const masVictorias=lista.slice().sort((a,b)=>wins(b)-wins(a))[0];
+    const mejorRacha=lista.slice().sort((a,b)=>Math.abs(Number(b.racha)||0)-Math.abs(Number(a.racha)||0))[0];
+    const mayorGanadas=lista.slice().sort((a,b)=>total(b)-total(a))[0];
+    abrirInfoPublica('🏆 RÉCORDS',`
+      <div class="public-section-grid">
+        <div class="public-card"><h4>👑 MAYOR ELO</h4><strong>${mayorElo?nombreSeguro(mayorElo):'---'}</strong><br>${mayorElo?eloSeguro(mayorElo):0} ELO</div>
+        <div class="public-card"><h4>🏆 MÁS VICTORIAS</h4><strong>${masVictorias?nombreSeguro(masVictorias):'---'}</strong><br>${masVictorias?wins(masVictorias):0} victorias</div>
+        <div class="public-card"><h4>🔥 MEJOR RACHA</h4><strong>${mejorRacha?nombreSeguro(mejorRacha):'---'}</strong><br>${mejorRacha?Math.abs(Number(mejorRacha.racha)||0):0} consecutivas</div>
+        <div class="public-card"><h4>🎱 MÁS PARTIDAS</h4><strong>${mayorGanadas?nombreSeguro(mayorGanadas):'---'}</strong><br>${mayorGanadas?total(mayorGanadas):0} partidas</div>
+      </div>
+    `);
+  };
+
+  window.abrirPaisesPublicos=function(){
+    const lista=listaJugadoresActual();
+    const mapa={};
+    lista.forEach(j=>{ const p=paisSeguro(j); mapa[p]=(mapa[p]||0)+1; });
+    const filas=Object.entries(mapa).sort((a,b)=>b[1]-a[1]).map(([pais,cantidad],i)=>`
+      <tr><td class="public-rank">${i+1}</td><td>${pais}</td><td>${cantidad}</td></tr>
+    `).join('');
+    abrirInfoPublica('🌎 PAÍSES',`
+      <table class="public-table">
+        <thead><tr><th>#</th><th>PAÍS</th><th>JUGADORES</th></tr></thead>
+        <tbody>${filas || '<tr><td colspan="3" class="public-empty">No hay jugadores registrados.</td></tr>'}</tbody>
+      </table>
+    `);
+  };
+
+  window.abrirReglamentoPublico=function(){
+    abrirInfoPublica('📜 REGLAMENTO',`
+      <div class="public-rule"><strong>1. RANKING ELO</strong><br>La clasificación se determina mediante el sistema ELO utilizado por el Ranking 8BP.</div>
+      <div class="public-rule"><strong>2. PARTIDAS</strong><br>Los resultados oficiales registrados por la administración actualizan la clasificación de los jugadores.</div>
+      <div class="public-rule"><strong>3. RESULTADOS</strong><br>Solo la administración puede registrar o modificar resultados oficiales.</div>
+      <div class="public-rule"><strong>4. JUGADORES</strong><br>La información pública de los jugadores puede ser consultada por cualquier espectador.</div>
+      <div class="public-rule"><strong>5. ADMINISTRACIÓN</strong><br>Las funciones de edición, eliminación, registro de partidas y modificación del ranking están reservadas al administrador.</div>
+      <div class="public-rule"><strong>6. FAIR PLAY</strong><br>Se espera que todos los participantes respeten las reglas y mantengan una competencia limpia.</div>
+    `);
+  };
+
+  window.abrirHistorialPublico=function(){
+    const lista=listaJugadoresActual().filter(j=>j.rival || j.resultado && j.resultado!=='---');
+    const filas=lista.sort((a,b)=>String(b.tiempo||'').localeCompare(String(a.tiempo||''))).map((j,i)=>`
+      <tr><td>${i+1}</td><td><strong>${nombreSeguro(j)}</strong></td><td>${j.resultado||'---'}</td><td>${j.rival||'---'}</td><td>${j.ultimaPartida||j.tiempo||'---'}</td></tr>
+    `).join('');
+    abrirInfoPublica('🎱 HISTORIAL DE PARTIDAS',`
+      <p style="color:#9ca6a7">Vista pública de los últimos resultados disponibles.</p>
+      <table class="public-table">
+        <thead><tr><th>#</th><th>JUGADOR</th><th>RESULTADO</th><th>RIVAL</th><th>HORA</th></tr></thead>
+        <tbody>${filas || '<tr><td colspan="5" class="public-empty">Todavía no hay partidas registradas.</td></tr>'}</tbody>
+      </table>
+    `);
+  };
+
+  function conectar(){
+    document.querySelectorAll('.top-menu span').forEach(item=>{
+      const t=item.textContent.trim().toUpperCase();
+      if(t==='ESTADÍSTICAS') item.onclick=abrirEstadisticasPublicas;
+      if(t==='RÉCORDS') item.onclick=abrirRecordsPublicos;
+    });
+
+    document.querySelectorAll('.menu button').forEach(item=>{
+      const t=item.textContent.trim().toUpperCase();
+      if(t.includes('HISTORIAL DE PARTIDAS')) item.onclick=abrirHistorialPublico;
+      else if(t.includes('ESTADÍSTICAS')) item.onclick=abrirEstadisticasPublicas;
+      else if(t.includes('RÉCORDS')) item.onclick=abrirRecordsPublicos;
+      else if(t.includes('PAÍSES')) item.onclick=abrirPaisesPublicos;
+      else if(t.includes('REGLAMENTO')) item.onclick=abrirReglamentoPublico;
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded',conectar);
+})();
+</script>
+
+<!-- MODO ESPECTADOR: esta página no contiene funciones administrativas activas. -->
 </body>
 </html>
