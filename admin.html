@@ -2027,7 +2027,10 @@ const jugadoresIniciales = {
     jugador10:{nombre:"HECTOR",pais:"México",bandera:"🇲🇽",elo:968,eloMaximo:968,cambio:-32,ganadas:0,perdidas:2,racha:-2,resultado:"DERROTA",rival:"FONSECA",tiempo:"6h atrás",avatar:"🎱",nick:"",bio:""}
 };
 
-let jugadores = [];
+let jugadores = Object.entries(jugadoresIniciales).map(([id,j])=>({
+    ...j,
+    _id:id
+}));
 let jugadorPerfilActual = null;
 let nuevaFotoPerfil = null;
 let quitarFotoSolicitada = false;
@@ -2148,7 +2151,14 @@ function iniciarFirebaseJugadores(){
 }
 
 
-// Entrar directamente al panel y cargar los jugadores.
+// Mostrar primero el respaldo local para que el administrador nunca
+// aparezca vacío mientras Firebase responde.
+jugadores.sort((a,b)=>b.elo-a.elo);
+mostrarRanking(jugadores);
+cargarListaJugadores();
+actualizarDatosGenerales();
+
+// Luego conectar Firebase. Si hay datos remotos, reemplazarán el respaldo.
 iniciarFirebaseJugadores();
 
 
