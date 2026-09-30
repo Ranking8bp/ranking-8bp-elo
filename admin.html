@@ -1689,32 +1689,6 @@ tbody tr:hover{
 
 <body>
 
-<!-- =========================
-     ACCESO ADMINISTRADOR
-========================= -->
-<div class="admin-login-overlay" id="adminLogin">
-    <div class="admin-login-box">
-        <div class="admin-login-logo">
-            <div class="ball">8</div>
-            <h1>RANKING <span>8BP</span></h1>
-            <small>PANEL DE ADMINISTRACIÓN</small>
-        </div>
-
-        <label>Correo del administrador</label>
-        <input id="adminEmail" type="email" placeholder="Correo">
-
-        <label>Contraseña</label>
-        <input id="adminPassword" type="password" placeholder="Contraseña">
-
-        <button class="admin-login-button" onclick="loginAdmin()">
-            🔐 ENTRAR AL PANEL
-        </button>
-
-        <div id="adminLoginError" class="admin-login-error"></div>
-    </div>
-</div>
-
-
 <div class="app">
 
 <!-- =========================
@@ -1836,10 +1810,6 @@ tbody tr:hover{
             <div class="user-avatar">
                 👤
             </div>
-
-            <button class="admin-logout" onclick="logoutAdmin()">
-                CERRAR SESIÓN
-            </button>
 
         </div>
 
@@ -1991,16 +1961,6 @@ import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 
 import {
-    getAuth,
-    signInWithEmailAndPassword,
-    onAuthStateChanged,
-    signOut,
-    setPersistence,
-    browserLocalPersistence
-}
-from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-
-import {
     getDatabase,
     ref,
     onValue,
@@ -2029,7 +1989,6 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 const database = getDatabase(app);
 
 
@@ -2065,91 +2024,11 @@ let unsubscribeJugadores = null;
 
 
 /* =====================================
-   LOGIN
+   MODO ADMINISTRADOR SIN LOGIN
+   El panel abre directamente, sin usuario ni contraseña.
 ===================================== */
 
-window.loginAdmin = async function(){
-
-    const email = document.getElementById("adminEmail").value.trim();
-    const password = document.getElementById("adminPassword").value;
-    const error = document.getElementById("adminLoginError");
-
-    error.textContent = "";
-
-    if(!email || !password){
-        error.textContent = "Escribe tu correo y contraseña.";
-        return;
-    }
-
-    try{
-        // Guarda la sesión en este navegador para no pedir usuario y
-        // contraseña cada vez que vuelvas a entrar al panel.
-        await setPersistence(auth, browserLocalPersistence);
-        await signInWithEmailAndPassword(auth,email,password);
-    }catch(e){
-        console.error("Firebase Login Error:", e);
-
-        if(e.code === "auth/invalid-credential" ||
-           e.code === "auth/wrong-password" ||
-           e.code === "auth/user-not-found"){
-            error.textContent = "Correo o contraseña incorrectos.";
-        }else if(e.code === "auth/invalid-api-key"){
-            error.textContent = "Error de configuración de Firebase (API Key).";
-        }else if(e.code === "auth/operation-not-allowed"){
-            error.textContent = "El acceso por correo y contraseña no está habilitado en Firebase.";
-        }else{
-            error.textContent = "Error de Firebase: " + (e.code || e.message);
-        }
-    }
-};
-
-window.logoutAdmin = async function(){
-    await signOut(auth);
-};
-
-document.getElementById("adminPassword").addEventListener("keydown",e=>{
-    if(e.key==="Enter") window.loginAdmin();
-});
-
-
-/* =====================================
-   AUTENTICACIÓN
-   Mantiene la sesión iniciada en este navegador.
-   Solo vuelve a pedir clave si cierras sesión,
-   borras los datos del navegador o Firebase invalida la sesión.
-===================================== */
-
-onAuthStateChanged(auth, async user=>{
-
-    const login = document.getElementById("adminLogin");
-
-    if(user){
-
-        login.classList.add("hidden");
-
-        document.getElementById("loggedAdminName").textContent =
-            (user.email || "ADMIN").split("@")[0].toUpperCase();
-
-        try{
-            await user.getIdToken(true);
-        }catch(error){
-            console.error("No se pudo actualizar el token de Firebase:", error);
-        }
-
-        iniciarFirebaseJugadores();
-
-    }else{
-
-        login.classList.remove("hidden");
-
-        if(unsubscribeJugadores){
-            unsubscribeJugadores();
-            unsubscribeJugadores = null;
-        }
-
-    }
-});
-
+document.getElementById("loggedAdminName").textContent = "ADMIN";
 
 /* =====================================
    CARGAR JUGADORES DESDE FIREBASE
@@ -2157,8 +2036,7 @@ onAuthStateChanged(auth, async user=>{
 
 function iniciarFirebaseJugadores(){
 
-    // Evita registrar más de un listener si Firebase vuelve a notificar
-    // el estado de autenticación.
+    // Evita registrar más de un listener duplicado.
     if(unsubscribeJugadores){
         unsubscribeJugadores();
         unsubscribeJugadores = null;
@@ -2221,12 +2099,16 @@ function iniciarFirebaseJugadores(){
         document.getElementById("rankingBody").innerHTML =
             `<tr><td colspan="8" style="color:#ff5555;padding:25px;">
                 ${esPermiso
-                    ? "❌ Firebase está bloqueando /jugadores. Publica las reglas database.rules.json del repositorio."
+                    ? "❌ Firebase está bloqueando /jugadores. Las reglas de Realtime Database deben permitir lectura y escritura sin autenticación."
                     : "❌ No se pudieron cargar los jugadores: " + escapeHTML(error?.message || "Error desconocido")}
             </td></tr>`;
 
     });
 }
+
+
+// Entrar directamente al panel y cargar los jugadores.
+iniciarFirebaseJugadores();
 
 
 /* =====================================
