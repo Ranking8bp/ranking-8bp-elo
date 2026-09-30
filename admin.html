@@ -2111,7 +2111,7 @@ document.getElementById("adminPassword").addEventListener("keydown",e=>{
    AUTENTICACIÓN
 ===================================== */
 
-onAuthStateChanged(auth,user=>{
+onAuthStateChanged(auth, async user=>{
 
     const login = document.getElementById("adminLogin");
 
@@ -2121,6 +2121,14 @@ onAuthStateChanged(auth,user=>{
 
         document.getElementById("loggedAdminName").textContent =
             (user.email || "ADMIN").split("@")[0].toUpperCase();
+
+        // Fuerza un token de Firebase actualizado antes de consultar
+        // Realtime Database. Evita lecturas con una sesión/token viejo.
+        try{
+            await user.getIdToken(true);
+        }catch(error){
+            console.error("No se pudo actualizar el token de Firebase:", error);
+        }
 
         iniciarFirebaseJugadores();
 
@@ -2142,6 +2150,13 @@ onAuthStateChanged(auth,user=>{
 ===================================== */
 
 function iniciarFirebaseJugadores(){
+
+    // Evita registrar más de un listener si Firebase vuelve a notificar
+    // el estado de autenticación.
+    if(unsubscribeJugadores){
+        unsubscribeJugadores();
+        unsubscribeJugadores = null;
+    }
 
     const jugadoresRef = ref(database,"jugadores");
 
@@ -2190,11 +2205,18 @@ function iniciarFirebaseJugadores(){
 
     },error=>{
 
-        console.error(error);
+        console.error("Firebase Realtime Database:", error);
+
+        const esPermiso =
+            error?.code === "PERMISSION_DENIED" ||
+            error?.code === "permission-denied" ||
+            String(error?.message || "").toLowerCase().includes("permission");
 
         document.getElementById("rankingBody").innerHTML =
             `<tr><td colspan="8" style="color:#ff5555;padding:25px;">
-                ❌ No se pudieron cargar los jugadores: ${error.message}
+                ${esPermiso
+                    ? "❌ Firebase está bloqueando /jugadores. Publica las reglas database.rules.json del repositorio."
+                    : "❌ No se pudieron cargar los jugadores: " + escapeHTML(error?.message || "Error desconocido")}
             </td></tr>`;
 
     });
