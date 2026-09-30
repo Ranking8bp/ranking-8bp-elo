@@ -2062,11 +2062,28 @@ function iniciarFirebaseJugadores(){
         // La base estaba vacía (null). Si sigue vacía, restauramos automáticamente
         // los jugadores de respaldo que ya existían en el sitio público.
         if(!snapshot.exists()){
+
+            // Mostrar inmediatamente el respaldo local, sin esperar a que
+            // Firebase vuelva a disparar el listener.
+            jugadores = Object.entries(jugadoresIniciales).map(([id,j])=>({
+                ...j,
+                _id:id
+            }));
+
+            jugadores.sort((a,b)=>b.elo-a.elo);
+
+            mostrarRanking(jugadores);
+            cargarListaJugadores();
+            actualizarDatosGenerales();
+
+            // Además, guardar el respaldo en Firebase para que desde este
+            // momento quede persistente y sincronizado entre dispositivos.
             try{
                 await set(jugadoresRef, jugadoresIniciales);
             }catch(error){
                 console.error("No se pudieron restaurar los jugadores iniciales:", error);
             }
+
             return;
         }
 
