@@ -2014,6 +2014,19 @@ const paisesDisponibles = [
    ESTADO
 ===================================== */
 
+const jugadoresIniciales = {
+    jugador01:{nombre:"EMANUEL",pais:"Ecuador",bandera:"🇪🇨",elo:1032,eloMaximo:1032,cambio:16,ganadas:1,perdidas:0,racha:1,resultado:"VICTORIA",rival:"JUANJO",tiempo:"2h atrás",avatar:"🎱",nick:"",bio:""},
+    jugador02:{nombre:"DELVIN",pais:"Rep. Dominicana",bandera:"🇩🇴",elo:1016,eloMaximo:1016,cambio:16,ganadas:1,perdidas:0,racha:1,resultado:"VICTORIA",rival:"MARTIN R 8BP",tiempo:"3h atrás",avatar:"🎱",nick:"",bio:""},
+    jugador03:{nombre:"CHANEKE",pais:"Colombia",bandera:"🇨🇴",elo:1016,eloMaximo:1016,cambio:16,ganadas:1,perdidas:0,racha:1,resultado:"VICTORIA",rival:"RICH",tiempo:"5h atrás",avatar:"🎱",nick:"",bio:""},
+    jugador04:{nombre:"FONSECA",pais:"México",bandera:"🇲🇽",elo:1016,eloMaximo:1016,cambio:16,ganadas:1,perdidas:0,racha:1,resultado:"VICTORIA",rival:"HECTOR",tiempo:"6h atrás",avatar:"🎱",nick:"",bio:""},
+    jugador05:{nombre:"MARTIN R 8BP",pais:"Perú",bandera:"🇵🇪",elo:1000,eloMaximo:1000,cambio:0,ganadas:0,perdidas:0,racha:0,resultado:"---",rival:"",tiempo:"--",avatar:"🎱",nick:"",bio:""},
+    jugador06:{nombre:"CISNERO",pais:"España",bandera:"🇪🇸",elo:1000,eloMaximo:1000,cambio:0,ganadas:1,perdidas:1,racha:-1,resultado:"DERROTA",rival:"DELVIN",tiempo:"1h atrás",avatar:"🎱",nick:"",bio:""},
+    jugador07:{nombre:"RICH",pais:"Argentina",bandera:"🇦🇷",elo:984,eloMaximo:984,cambio:-16,ganadas:0,perdidas:1,racha:-1,resultado:"DERROTA",rival:"CHANEKE",tiempo:"4h atrás",avatar:"🎱",nick:"",bio:""},
+    jugador08:{nombre:"JUANJO",pais:"Venezuela",bandera:"🇻🇪",elo:984,eloMaximo:984,cambio:-16,ganadas:0,perdidas:1,racha:-1,resultado:"DERROTA",rival:"EMANUEL",tiempo:"2h atrás",avatar:"🎱",nick:"",bio:""},
+    jugador09:{nombre:"CRAZY",pais:"Chile",bandera:"🇨🇱",elo:984,eloMaximo:984,cambio:-16,ganadas:0,perdidas:1,racha:-1,resultado:"DERROTA",rival:"FONSECA",tiempo:"3h atrás",avatar:"🎱",nick:"",bio:""},
+    jugador10:{nombre:"HECTOR",pais:"México",bandera:"🇲🇽",elo:968,eloMaximo:968,cambio:-32,ganadas:0,perdidas:2,racha:-2,resultado:"DERROTA",rival:"FONSECA",tiempo:"6h atrás",avatar:"🎱",nick:"",bio:""}
+};
+
 let jugadores = [];
 let jugadorPerfilActual = null;
 let nuevaFotoPerfil = null;
@@ -2044,7 +2057,18 @@ function iniciarFirebaseJugadores(){
 
     const jugadoresRef = ref(database,"jugadores");
 
-    unsubscribeJugadores = onValue(jugadoresRef,snapshot=>{
+    unsubscribeJugadores = onValue(jugadoresRef, async snapshot=>{
+
+        // La base estaba vacía (null). Si sigue vacía, restauramos automáticamente
+        // los jugadores de respaldo que ya existían en el sitio público.
+        if(!snapshot.exists()){
+            try{
+                await set(jugadoresRef, jugadoresIniciales);
+            }catch(error){
+                console.error("No se pudieron restaurar los jugadores iniciales:", error);
+            }
+            return;
+        }
 
         const data = snapshot.val() || {};
 
