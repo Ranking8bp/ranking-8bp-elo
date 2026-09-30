@@ -2736,75 +2736,90 @@ function guardarDatos(){
         });
 }
 
+function aplicarDatosFirebase(snapshot){
+
+    if(!snapshot.exists()){
+        // Si Firebase todavía no tiene datos, se conserva el respaldo
+        // incluido en el HTML sin escribir nada en la base de datos.
+        mostrarRanking(jugadores);
+        if(typeof actualizarDatosGenerales === "function") actualizarDatosGenerales();
+        return;
+    }
+
+    const datos = snapshot.val();
+    let lista = [];
+
+    if(Array.isArray(datos)){
+        lista = datos.filter(Boolean);
+    }else if(datos && typeof datos === "object"){
+        lista = Object.values(datos).filter(Boolean);
+    }
+
+    if(!lista.length){
+        mostrarRanking(jugadores);
+        if(typeof actualizarDatosGenerales === "function") actualizarDatosGenerales();
+        return;
+    }
+
+    jugadores.length = 0;
+
+    lista.forEach(j => {
+        jugadores.push({
+            ...j,
+            nombre: j.nombre || "SIN NOMBRE",
+            pais: j.pais || "Ecuador",
+            bandera: j.bandera || "🌎",
+            elo: Number(j.elo ?? 1000),
+            eloMaximo: Number(j.eloMaximo ?? j.elo ?? 1000),
+            cambio: Number(j.cambio ?? 0),
+            ganadas: Number(j.ganadas ?? j.victorias ?? 0),
+            perdidas: Number(j.perdidas ?? j.derrotas ?? 0),
+            racha: Number(j.racha ?? 0),
+            resultado: j.resultado || "---",
+            rival: j.rival || "",
+            tiempo: j.tiempo || "--",
+            avatar: j.avatar || "🎱",
+            nick: j.nick || "",
+            bio: j.bio || ""
+        });
+    });
+
+    jugadores.sort((a,b)=>b.elo-a.elo);
+    mostrarRanking(jugadores);
+
+    if(typeof actualizarDatosGenerales === "function") actualizarDatosGenerales();
+    if(typeof cargarJugadoresEnSelect === "function") cargarJugadoresEnSelect();
+    if(typeof cargarListaJugadores === "function") cargarListaJugadores();
+    if(typeof actualizarPreview === "function") actualizarPreview();
+}
+
+
+let rankingListenerActivo = false;
+
 function cargarDatos(){
 
     if(typeof rankingRef === "undefined") return;
+    if(rankingListenerActivo) return;
 
-    rankingRef.once("value")
-        .then(snapshot => {
+    rankingListenerActivo = true;
 
-            if(!snapshot.exists()){
-                // El espectador NO inicializa ni modifica Firebase.
-                // Si no hay datos todavía, se mantienen los datos locales de respaldo.
-                mostrarRanking(jugadores);
-                actualizarDatosGenerales();
-                return;
-            }
-
-            const datos = snapshot.val();
-
-            if(Array.isArray(datos) && datos.length){
-                jugadores.length = 0;
-                datos.forEach(j => jugadores.push(j));
-            }else if(datos && typeof datos === "object"){
-                jugadores.length = 0;
-                Object.values(datos).forEach(j => jugadores.push(j));
-            }
-
-            jugadores.sort((a,b)=>b.elo-a.elo);
-            mostrarRanking(jugadores);
-
-            if(typeof actualizarDatosGenerales === "function") actualizarDatosGenerales();
-            if(typeof cargarJugadoresEnSelect === "function") cargarJugadoresEnSelect();
-            if(typeof cargarListaJugadores === "function") cargarListaJugadores();
-            if(typeof actualizarPreview === "function") actualizarPreview();
-        })
-        .catch(error => {
+    // Un solo listener sirve tanto para la primera carga como para
+    // todas las actualizaciones posteriores. Así evitamos dos lecturas
+    // simultáneas de /jugadores.
+    rankingRef.on(
+        "value",
+        aplicarDatosFirebase,
+        error => {
+            rankingListenerActivo = false;
             console.error("Error cargando Firebase:", error);
-            // Si Firebase falla, la página conserva los datos incluidos en el HTML.
+
+            // Si las reglas de Firebase todavía no están publicadas,
+            // la página conserva los datos locales y sigue funcionando.
             mostrarRanking(jugadores);
-        });
-
-    // Escucha permanente: cualquier cambio hecho desde otro dispositivo
-    // se refleja automáticamente en esta página.
-    rankingRef.on("value", snapshot => {
-
-        if(!snapshot.exists()) return;
-
-        const datos = snapshot.val();
-        let lista = [];
-
-        if(Array.isArray(datos)){
-            lista = datos;
-        }else if(datos && typeof datos === "object"){
-            lista = Object.values(datos);
+            if(typeof actualizarDatosGenerales === "function") actualizarDatosGenerales();
         }
-
-        if(!lista.length) return;
-
-        jugadores.length = 0;
-        lista.forEach(j => jugadores.push(j));
-        jugadores.sort((a,b)=>b.elo-a.elo);
-
-        mostrarRanking(jugadores);
-
-        if(typeof actualizarDatosGenerales === "function") actualizarDatosGenerales();
-        if(typeof cargarJugadoresEnSelect === "function") cargarJugadoresEnSelect();
-        if(typeof cargarListaJugadores === "function") cargarListaJugadores();
-        if(typeof actualizarPreview === "function") actualizarPreview();
-    });
+    );
 }
-
 
 
 /* =====================================
