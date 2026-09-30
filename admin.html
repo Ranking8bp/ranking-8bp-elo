@@ -1994,7 +1994,9 @@ import {
     getAuth,
     signInWithEmailAndPassword,
     onAuthStateChanged,
-    signOut
+    signOut,
+    setPersistence,
+    browserLocalPersistence
 }
 from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
@@ -2080,6 +2082,9 @@ window.loginAdmin = async function(){
     }
 
     try{
+        // Guarda la sesión en este navegador para no pedir usuario y
+        // contraseña cada vez que vuelvas a entrar al panel.
+        await setPersistence(auth, browserLocalPersistence);
         await signInWithEmailAndPassword(auth,email,password);
     }catch(e){
         console.error("Firebase Login Error:", e);
@@ -2109,53 +2114,41 @@ document.getElementById("adminPassword").addEventListener("keydown",e=>{
 
 /* =====================================
    AUTENTICACIÓN
-   Siempre solicita correo y contraseña al
-   entrar o recargar el panel de administrador.
+   Mantiene la sesión iniciada en este navegador.
+   Solo vuelve a pedir clave si cierras sesión,
+   borras los datos del navegador o Firebase invalida la sesión.
 ===================================== */
 
-async function iniciarAutenticacionAdmin(){
+onAuthStateChanged(auth, async user=>{
 
-    // Firebase guarda la sesión por defecto. La cerramos al cargar esta
-    // página para que el panel ADMIN nunca entre automáticamente.
-    try{
-        await signOut(auth);
-    }catch(error){
-        console.warn("No había una sesión previa que cerrar:", error);
-    }
+    const login = document.getElementById("adminLogin");
 
-    onAuthStateChanged(auth, async user=>{
+    if(user){
 
-        const login = document.getElementById("adminLogin");
+        login.classList.add("hidden");
 
-        if(user){
+        document.getElementById("loggedAdminName").textContent =
+            (user.email || "ADMIN").split("@")[0].toUpperCase();
 
-            login.classList.add("hidden");
-
-            document.getElementById("loggedAdminName").textContent =
-                (user.email || "ADMIN").split("@")[0].toUpperCase();
-
-            try{
-                await user.getIdToken(true);
-            }catch(error){
-                console.error("No se pudo actualizar el token de Firebase:", error);
-            }
-
-            iniciarFirebaseJugadores();
-
-        }else{
-
-            login.classList.remove("hidden");
-
-            if(unsubscribeJugadores){
-                unsubscribeJugadores();
-                unsubscribeJugadores = null;
-            }
-
+        try{
+            await user.getIdToken(true);
+        }catch(error){
+            console.error("No se pudo actualizar el token de Firebase:", error);
         }
-    });
-}
 
-iniciarAutenticacionAdmin();
+        iniciarFirebaseJugadores();
+
+    }else{
+
+        login.classList.remove("hidden");
+
+        if(unsubscribeJugadores){
+            unsubscribeJugadores();
+            unsubscribeJugadores = null;
+        }
+
+    }
+});
 
 
 /* =====================================
