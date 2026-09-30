@@ -2109,40 +2109,53 @@ document.getElementById("adminPassword").addEventListener("keydown",e=>{
 
 /* =====================================
    AUTENTICACIÓN
+   Siempre solicita correo y contraseña al
+   entrar o recargar el panel de administrador.
 ===================================== */
 
-onAuthStateChanged(auth, async user=>{
+async function iniciarAutenticacionAdmin(){
 
-    const login = document.getElementById("adminLogin");
-
-    if(user){
-
-        login.classList.add("hidden");
-
-        document.getElementById("loggedAdminName").textContent =
-            (user.email || "ADMIN").split("@")[0].toUpperCase();
-
-        // Fuerza un token de Firebase actualizado antes de consultar
-        // Realtime Database. Evita lecturas con una sesión/token viejo.
-        try{
-            await user.getIdToken(true);
-        }catch(error){
-            console.error("No se pudo actualizar el token de Firebase:", error);
-        }
-
-        iniciarFirebaseJugadores();
-
-    }else{
-
-        login.classList.remove("hidden");
-
-        if(unsubscribeJugadores){
-            unsubscribeJugadores();
-            unsubscribeJugadores = null;
-        }
-
+    // Firebase guarda la sesión por defecto. La cerramos al cargar esta
+    // página para que el panel ADMIN nunca entre automáticamente.
+    try{
+        await signOut(auth);
+    }catch(error){
+        console.warn("No había una sesión previa que cerrar:", error);
     }
-});
+
+    onAuthStateChanged(auth, async user=>{
+
+        const login = document.getElementById("adminLogin");
+
+        if(user){
+
+            login.classList.add("hidden");
+
+            document.getElementById("loggedAdminName").textContent =
+                (user.email || "ADMIN").split("@")[0].toUpperCase();
+
+            try{
+                await user.getIdToken(true);
+            }catch(error){
+                console.error("No se pudo actualizar el token de Firebase:", error);
+            }
+
+            iniciarFirebaseJugadores();
+
+        }else{
+
+            login.classList.remove("hidden");
+
+            if(unsubscribeJugadores){
+                unsubscribeJugadores();
+                unsubscribeJugadores = null;
+            }
+
+        }
+    });
+}
+
+iniciarAutenticacionAdmin();
 
 
 /* =====================================
